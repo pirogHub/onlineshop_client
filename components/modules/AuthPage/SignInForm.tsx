@@ -13,6 +13,7 @@ import { useState } from 'react'
 import { $mode } from '@/context/mode'
 import { useStore } from 'effector-react'
 import { useRouter } from 'next/router'
+import NameInput from '@/components/elements/AuthPage/NameInput'
 const SignInForm = () => {
   const [spinner, setSpinner] = useState(false)
   const mode = useStore($mode)
@@ -51,7 +52,7 @@ const SignInForm = () => {
       <h2 className={cn(styles.form_title, styles.title, darkModeClass)}>
         Войти на сайт
       </h2>
-      <EmailInput register={register} errors={errors} />
+      <NameInput register={register} errors={errors} />
       <PasswordInput register={register} errors={errors} />
       <button
         className={cn(
