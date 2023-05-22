@@ -19,10 +19,12 @@ const HeaderBottom: FC<PropsWithChildren> = () => {
     <div className={styles.header__bottom}>
       <div className={cn('container', styles.header__bottom__container)}>
         <h1 className={styles.header__logo}>
-          <Link href="/dashboard" className={styles.header__logo}>
+          <Link href="/dashboard" className={styles.header__logo__link}>
             <img src="/img/logo.svg" alt="logo" />
 
-            <span className={cn(styles.header__logo, darkModeClass)}>
+            <span
+              className={cn(styles.header__logo__link__text, darkModeClass)}
+            >
               Детали для газовых котлов
             </span>
           </Link>

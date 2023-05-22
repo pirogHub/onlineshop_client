@@ -1,4 +1,5 @@
-import Header from '@/components/modules/Header/Header'
+import Layout from '@/components/layout/Layout'
+import DashboardPage from '@/components/templates/DashboardPage/DashboardPage'
 import Head from 'next/head'
 
 export default function Dashboard() {
@@ -10,12 +11,12 @@ export default function Dashboard() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <Header />
-      <main>
-        <div className="overlay"></div>
-        <h1>Fashboard</h1>
-        {/* <DashboardPage /> */}
-      </main>
+      <Layout>
+        <main>
+          <DashboardPage />
+          <div className="overlay"></div>
+        </main>
+      </Layout>
     </>
   )
 }

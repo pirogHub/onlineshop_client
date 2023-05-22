@@ -4,15 +4,19 @@ import * as MaterialIcons from 'react-icons/md'
 import * as TfiIcons from 'react-icons/tfi'
 import * as CgIcons from 'react-icons/cg'
 import * as IoIcons from 'react-icons/io5'
+import * as FiIcons from 'react-icons/fi'
+import * as RxIcons from 'react-icons/rx'
 
 const ReactIcons = {
   ...MaterialIcons,
   ...TfiIcons,
   ...CgIcons,
   ...IoIcons,
+  ...FiIcons,
+  ...RxIcons,
 }
 
-type TypeReactIconName = keyof typeof ReactIcons
+export type TypeReactIconName = keyof typeof ReactIcons
 
 const MaterialIcon = ({
   name,
