@@ -72,7 +72,7 @@ export const optionStyles = (
 
     const colorHoverForLightMode = helper_isSelected(state, '#f2f2f2', '#9e9e9e')
 
-    const colorHoverForDarkMode = helper_isSelected(state, '#f2f2f2', '#9e9e9e')
+    const colorHoverForDarkMode = helper_isSelected(state, '#9e9e9e', '#f2f2f2')
 
 
     return {

@@ -2,8 +2,8 @@ import { Event } from 'effector-next'
 
 export interface IManufacturersBlockProps {
     title: string
-    // event: Event<IFilterCheckboxItem>
-    // manufacturersList: IFilterCheckboxItem[]
+    event: Event<IFilterCheckboxItem>
+    manufacturersList: IFilterCheckboxItem[]
 }
 
 export interface IManufacturersBlockItemProps {
@@ -32,6 +32,7 @@ export interface IFilterManufacturerAccordionProps {
     title: string | false
     setManufacturer: Event<IFilterCheckboxItem[]>
     updateManufacturer: Event<IFilterCheckboxItem>
+    isExpandedDefault?: boolean
 }
 
 interface ICatalogBaseTypes {

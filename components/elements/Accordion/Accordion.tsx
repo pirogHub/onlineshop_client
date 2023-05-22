@@ -10,8 +10,9 @@ const Accordion = ({
   arrowOpenClass,
   isMobileForFilters,
   hideArrowClass,
+  isExpandedDefault,
 }: IAccordion) => {
-  const [expanded, setExpanded] = useState(false)
+  const [expanded, setExpanded] = useState(isExpandedDefault ? true : false)
 
   const toggleAccordion = () => setExpanded(!expanded)
 

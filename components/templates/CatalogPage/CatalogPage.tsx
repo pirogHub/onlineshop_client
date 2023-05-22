@@ -3,10 +3,19 @@ import cn from 'classnames'
 import styles from './CatalogPage.module.scss'
 import { useTheme } from '@/hooks/useTheme'
 import { AnimatePresence } from 'framer-motion'
-import ManufacturersBlock from '@/components/modules/CatalogPage/ManufacturersBlock'
+import ManufacturersBlock from '@/components/modules/CatalogPage/ManufacturersBlock/ManufacturersBlock'
 import FilterSelect from '@/components/modules/CatalogPage/FilterSelect'
 import { getBoilerPartsFx } from '@/app/api/boilerparts'
-import { $boilerParts, setBoilerParts } from '@/context/boilerParts'
+import {
+  $boilerManufacturers,
+  $boilerParts,
+  $partsManufacturers,
+  setBoilerManufacturers,
+  setBoilerParts,
+  setPartsManufacturers,
+  updateBoilerManufacturer,
+  updatePartsManufacturer,
+} from '@/context/boilerParts'
 import { toast } from 'react-toastify'
 import { useStore } from 'effector-react'
 import Skeleton from '@/components/elements/Skeleton/Skeleton'
@@ -15,12 +24,16 @@ import ReactPaginate from 'react-paginate'
 import { IQueryParams } from '@/types/catalog'
 import { useRouter } from 'next/router'
 import { IBoilerParts } from '@/types/boilerparts'
+import CatalogFilters from '@/components/modules/CatalogPage/CatalogFilters/CatalogFilters'
 
 const CatalogPage = ({ query }: { query: IQueryParams }) => {
-  const darkModeClass = useTheme(styles)
-  const [spinner, setSpinner] = useState(false)
-
   const router = useRouter()
+  const darkModeClass = useTheme(styles)
+
+  const [spinner, setSpinner] = useState(false)
+  const [priceRange, setPriceRange] = useState([1000, 9000])
+  const [isPriceRangeChanged, setIsPriceRangeChanged] = useState(false)
+
   const isValidOffset =
     query.offset && !isNaN(+query.offset) && +query.offset > 0
   const [currentPage, setCurrentPage] = useState(
@@ -28,6 +41,20 @@ const CatalogPage = ({ query }: { query: IQueryParams }) => {
   )
   const boilerParts = useStore($boilerParts)
   const pagesCount = Math.ceil(boilerParts.count / 20)
+  const partsManufacturers = useStore($partsManufacturers)
+  const boilerManufacturers = useStore($boilerManufacturers)
+
+  const isAnyBoilerManufacturerChecked = partsManufacturers.some(
+    (item) => item.checked
+  )
+  const isAnyPartsManufacturerChecked = boilerManufacturers.some(
+    (item) => item.checked
+  )
+  const resetFilterBtnDisabled = !(
+    isPriceRangeChanged ||
+    isAnyBoilerManufacturerChecked ||
+    isAnyPartsManufacturerChecked
+  )
 
   const loadBoilerParts = async () => {
     try {
@@ -143,6 +170,23 @@ const CatalogPage = ({ query }: { query: IQueryParams }) => {
     }
   }
 
+  const resetFilters = async () => {
+    try {
+      const data = await getBoilerPartsFx('/boiler-parts?limit=20&offset=0')
+      setBoilerManufacturers(
+        boilerManufacturers.map((item) => ({ ...item, checked: false }))
+      )
+      setPartsManufacturers(
+        partsManufacturers.map((item) => ({ ...item, checked: false }))
+      )
+      setBoilerParts(data)
+      setPriceRange([1000, 9000])
+      setIsPriceRangeChanged(false)
+    } catch (error) {
+      toast.error((error as Error).message)
+    }
+  }
+
   return (
     <section className={styles.catalog}>
       <div
@@ -153,14 +197,27 @@ const CatalogPage = ({ query }: { query: IQueryParams }) => {
         </h2>
         <div className={cn(styles.catalog__top, darkModeClass)}>
           <AnimatePresence>
-            <ManufacturersBlock title="Производитель котлов:" />
+            {isAnyBoilerManufacturerChecked && (
+              <ManufacturersBlock
+                title="Производитель котлов:"
+                event={updateBoilerManufacturer}
+                manufacturersList={boilerManufacturers}
+              />
+            )}
           </AnimatePresence>
           <AnimatePresence>
-            <ManufacturersBlock title="Производитель запчастей:" />
+            {isAnyPartsManufacturerChecked && (
+              <ManufacturersBlock
+                title="Производитель запчастей:"
+                event={updatePartsManufacturer}
+                manufacturersList={partsManufacturers}
+              />
+            )}
           </AnimatePresence>
           <div className={cn(styles.catalog__top__inner, darkModeClass)}>
             <button
-              disabled
+              onClick={resetFilters}
+              disabled={resetFilterBtnDisabled}
               className={cn(styles.catalog__top__reset, darkModeClass)}
             >
               Сбросить фильтр
@@ -170,7 +227,16 @@ const CatalogPage = ({ query }: { query: IQueryParams }) => {
         </div>
         <div className={cn(styles.catalog__bottom, darkModeClass)}>
           <div className={cn(styles.catalog__bottom__inner, darkModeClass)}>
-            <div className={cn(styles.ZERO, darkModeClass)}>Filters</div>
+            <CatalogFilters
+              priceRange={priceRange}
+              setIsPriceRangeChanged={setIsPriceRangeChanged}
+              setPriceRange={setPriceRange}
+              resetFilterBtnDisabled={resetFilterBtnDisabled}
+              applyFilters={() => {}}
+              resetFilters={resetFilters}
+              spinner={spinner}
+              isPriceRangeChanged={isPriceRangeChanged}
+            />
             {spinner ? (
               <Skeleton.SkeletonUl count={8} />
             ) : (

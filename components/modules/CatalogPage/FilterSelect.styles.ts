@@ -56,6 +56,7 @@ export const selectStyles: StylesConfig<IOption, boolean, GroupBase<IOption>> = 
         ...defaultStyles,
         paddingTop: 0,
         paddingBottom: 0,
+
     }),
     placeholder: (defaultStyles) => ({
         ...defaultStyles,

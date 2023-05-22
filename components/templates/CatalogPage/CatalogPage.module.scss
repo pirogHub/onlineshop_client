@@ -60,6 +60,12 @@
             border-radius: 40px;
             color: #4E4C4C;
 
+            &:hover {
+                color: #ffffff;
+
+                background-color: #d75b5f;
+            }
+
             @media (max-width: 820px) {
                 display: none
             }
@@ -287,6 +293,8 @@
                 border: none;
                 padding: 6px 8px;
 
+
+
                 &:disabled {
                     opacity: 0.5;
                     pointer-events: none;
@@ -321,6 +329,10 @@
                     font-size: 18px;
                     color: #2D2D2D;
 
+                    &:hover {
+                        color: #535353;
+                    }
+
                     @media (max-width: 820px) {
                         padding-bottom: 12px;
                         border-bottom: 1px solid #E1E1E1;
@@ -328,6 +340,10 @@
 
                     &.dark_mode {
                         color: #f2f2f2;
+
+                        &:hover {
+                            color: #dacf91;
+                        }
                     }
 
                     &::before {
@@ -451,7 +467,7 @@
                             display: block;
                             position: absolute;
                             top: 4px;
-                            left: 9px;
+                            left: 8px;
                             width: 4px;
                             height: 9px;
                             border: solid #fff;
@@ -528,6 +544,11 @@
                     margin-bottom: 24px;
                     color: #FAFBFC;
 
+                    &:hover {
+                        color: #FAFBFC;
+                        background-color: #185285;
+                    }
+
                     &:disabled {
                         opacity: 0.5;
                         pointer-events: none;
@@ -539,6 +560,11 @@
                     background-color: #EBF5FD;
                     border: 1px solid #1C629E;
                     border-radius: 4px;
+
+                    &:hover {
+                        color: #097de3;
+                        background-color: #cad4dc;
+                    }
 
                     &:disabled {
                         opacity: 0.5;
