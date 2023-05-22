@@ -8,6 +8,12 @@ import { getBestsellersFx } from '@/app/api/boilerparts'
 import { toast } from 'react-toastify'
 import { useTheme } from '@/hooks/useTheme'
 import DashboardSlider from './DashboardSlider/DashboardSlider'
+import { useStore } from 'effector-react'
+import { $shoppingCart } from '@/context/shopping-cart'
+import { AnimatePresence } from 'framer-motion'
+import CartAlert from '@/components/modules/DashboardPage/CartAlert'
+
+import { motion } from 'framer-motion'
 
 const DashboardPage: FC<PropsWithChildren> = () => {
   const darkModeClass = useTheme(styles)
@@ -18,6 +24,10 @@ const DashboardPage: FC<PropsWithChildren> = () => {
   )
 
   const [spinner, setSpinner] = useState(false)
+  const shoppingCart = useStore($shoppingCart)
+  const [showAlert, setShowAlert] = useState(!!shoppingCart.length)
+
+  const closeAlert = () => setShowAlert(false)
 
   const loadBoilerPArts = async () => {
     try {
@@ -41,6 +51,18 @@ const DashboardPage: FC<PropsWithChildren> = () => {
   return (
     <section className={styles.dashboard}>
       <div className={cn('container', styles.dashboard__container)}>
+        <AnimatePresence>
+          {showAlert && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className={cn(styles.dashboard__alert, darkModeClass)}
+            >
+              <CartAlert closeAlert={closeAlert} count={shoppingCart.length} />
+            </motion.div>
+          )}
+        </AnimatePresence>
         <div className={styles.dashboard__brands}>
           <CustomSlider items={brandItems} />
         </div>

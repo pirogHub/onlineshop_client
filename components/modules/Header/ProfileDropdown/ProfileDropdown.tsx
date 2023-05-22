@@ -9,15 +9,26 @@ import { useTheme } from '@/hooks/useTheme'
 
 import cn from 'classnames'
 import { AnimatePresence, motion } from 'framer-motion'
+import { useStore } from 'effector-react'
+import { $user } from '@/context/user'
+import { useRouter } from 'next/router'
+import { logoutFx } from '@/app/api/auth'
 
 const ProfileDropdown = forwardRef<HTMLDivElement, IWrappedComponentProps>(
   ({ open, setOpen }, ref) => {
     const darkModeClass = useTheme(styles)
 
+    const user = useStore($user)
+    const router = useRouter()
     const toggleProfileDropdown = () => {
       console.log('toggleProfileDropdown')
 
       setOpen(!open)
+    }
+
+    const handleLogout = async () => {
+      await logoutFx('/users/logout')
+      router.push('/')
     }
 
     useEffect(() => {
@@ -56,16 +67,19 @@ const ProfileDropdown = forwardRef<HTMLDivElement, IWrappedComponentProps>(
                     darkModeClass
                   )}
                 >
-                  Ivan
+                  {user.username}
                 </span>
                 <span
                   className={cn(styles.profile__dropdown__email, darkModeClass)}
                 >
-                  ivan@gmail.com
+                  {user.email}
                 </span>
               </li>
               <li className={styles.profile__dropdown__item}>
-                <button className={styles.profile__dropdown__item__btn}>
+                <button
+                  onClick={handleLogout}
+                  className={styles.profile__dropdown__item__btn}
+                >
                   <span
                     className={cn(
                       styles.profile__dropdown__item__text,

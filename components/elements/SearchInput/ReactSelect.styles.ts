@@ -1,5 +1,5 @@
 import { StylesConfig, GroupBase, OptionProps } from "react-select";
-import { IOption } from "./types";
+import { IOption } from "@/types/common";
 import { CSSObjectWithLabel } from "react-select"
 
 

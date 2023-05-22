@@ -1,7 +1,9 @@
+import { AxiosError } from 'axios';
 import { toast } from 'react-toastify';
 import api from '../axiosClient';
 import { ISingInFx, ISingUpFx } from './../../types/auth';
 import { createEffect } from 'effector-next';
+import { HTTPStatus } from '@/constants';
 
 
 export const signUpFx = createEffect(
@@ -30,5 +32,45 @@ export const signInFx = createEffect(
         }
         toast.success("Вход выполнен!")
         return data
+    }
+)
+
+export const checkUserAuthFx = createEffect(
+    async (url: string) => {
+
+        try {
+            const { data } = await api.get(url)
+
+            return data
+        } catch (error) {
+            const AxiosError = error as AxiosError
+            if (AxiosError.response) {
+                if (AxiosError.response.status === HTTPStatus.FORBIDDEN) {
+                    return false
+                }
+            }
+
+            toast.error((error as Error).message)
+        }
+    }
+)
+
+export const logoutFx = createEffect(
+    async (url: string) => {
+
+        try {
+            await api.get(url)
+
+
+        } catch (error) {
+            const AxiosError = error as AxiosError
+            if (AxiosError.response) {
+                if (AxiosError.response.status === HTTPStatus.FORBIDDEN) {
+                    return false
+                }
+            }
+
+            toast.error((error as Error).message)
+        }
     }
 )

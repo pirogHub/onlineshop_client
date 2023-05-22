@@ -3,7 +3,7 @@ import { FC, useState } from 'react'
 import styles from './SearchInput.module.scss'
 import { useTheme } from '@/hooks/useTheme'
 import Select from 'react-select'
-import { SelectOptionType } from './types'
+import { SelectOptionType } from '@/types/common'
 import {
   controlStyles,
   inputStyles,

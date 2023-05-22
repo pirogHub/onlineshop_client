@@ -57,7 +57,9 @@ const DashboardSlider = ({
   return (
     <Slider {...settings} className={styles.dashboard__slider}>
       {spinner ? (
-        [...Array(8)].map((item) => <Skeleton style={width} key={item} />)
+        [...Array(8)].map((item) => (
+          <Skeleton.SkeletonDiv style={width} key={item} />
+        ))
       ) : items.length ? (
         items.map((item) => (
           <div
