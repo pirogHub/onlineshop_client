@@ -2,7 +2,11 @@ import Layout from '@/components/layout/Layout'
 import DashboardPage from '@/components/templates/DashboardPage/DashboardPage'
 import Head from 'next/head'
 
+import Breadcrumbs from '@/components/modules/Breadcrumbs/Breadcrumbs'
+
 export default function Dashboard() {
+  const getDefaultTextGenerator = () => ''
+  const getTextGenerator = () => ''
   return (
     <>
       <Head>
@@ -13,6 +17,10 @@ export default function Dashboard() {
       </Head>
       <Layout>
         <main>
+          <Breadcrumbs
+            getDefaultTextGenerator={getDefaultTextGenerator}
+            getTextGenerator={getTextGenerator}
+          />
           <DashboardPage />
           <div className="overlay"></div>
         </main>

@@ -8,6 +8,7 @@ import EditSvg from "./EditSvg"
 import DoneSvg from "./DoneSvg"
 import MailSvg from "./MailSvg"
 import SearchSvg from "./SearchSvg"
+import CrumbArrowSvg from "./CrumbArrowSvg"
 
 const SVG = {
     DeleteSvg,
@@ -19,7 +20,8 @@ const SVG = {
     EditSvg,
     DoneSvg,
     MailSvg,
-    SearchSvg
+    SearchSvg,
+    CrumbArrowSvg
 }
 
 export default SVG

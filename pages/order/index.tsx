@@ -1,8 +1,12 @@
 import Layout from '@/components/layout/Layout'
+import Breadcrumbs from '@/components/modules/Breadcrumbs/Breadcrumbs'
 import OrderPage from '@/components/templates/OrderPage/OrderPage'
 import Head from 'next/head'
+import { useCallback } from 'react'
 
 export default function Order() {
+  const getDefaultTextGenerator = useCallback(() => 'Оформление заказа', [])
+  const getTextGenerator = useCallback((param: string) => ({}[param]), [])
   return (
     <>
       <Head>
@@ -13,6 +17,10 @@ export default function Order() {
       </Head>
       <Layout>
         <main>
+          <Breadcrumbs
+            getDefaultTextGenerator={getDefaultTextGenerator}
+            getTextGenerator={getTextGenerator}
+          />
           <OrderPage />
           <div className="overlay"></div>
         </main>
