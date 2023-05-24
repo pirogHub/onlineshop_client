@@ -702,16 +702,22 @@
 
 
         &__item {
+
+            // &__inner {
+            //     margin-bottom: 10px;
+            // }
+
             position: relative;
             align-self: flex-start;
             box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.1);
             border-radius: 4px;
             overflow: hidden;
-            padding: 24px 16px;
-            transition: transform .2s ease-in-out, box-shadow .2s ease-in-out;
+            padding: 18px 16px;
+            transition: transform .2s ease-in-out,
+                box-shadow .2s ease-in-out;
 
             @media (max-width: 560px) {
-                padding: 16px 8px;
+                padding: 12px 8px;
                 height: 277px;
             }
 
@@ -740,13 +746,13 @@
                 cursor: pointer;
                 margin: 0;
                 font-weight: 400;
-                margin-bottom: 24px;
+                margin-bottom: 10px;
                 font-size: 18px;
                 color: #4E4C4C;
 
                 @media (max-width: 560px) {
                     font-size: 15px;
-                    margin-bottom: 16px;
+                    margin-bottom: 12px;
                     text-overflow: ellipsis;
                     white-space: nowrap;
                     overflow: hidden;
@@ -755,9 +761,13 @@
 
             &__code {
                 display: block;
-                margin-bottom: 24px;
+                margin-bottom: 12px;
                 font-size: 14px;
                 color: #7B7B7B;
+
+                text-overflow: ellipsis;
+                white-space: nowrap;
+                overflow: hidden;
 
                 @media (max-width: 560px) {
                     font-size: 13px;
@@ -769,6 +779,7 @@
                 font-weight: 500;
                 font-size: 20px;
                 color: #2D2D2D;
+                // margin-top: 10px;
 
                 @media (max-width: 560px) {
                     position: absolute;
@@ -784,10 +795,10 @@
                 visibility: hidden;
                 position: absolute;
                 border: none;
-                bottom: 24px;
-                right: 16px;
-                width: 40px;
-                height: 40px;
+                bottom: 12px;
+                right: 12px;
+                width: 35px;
+                height: 35px;
                 background-color: #FFCF62;
                 border-radius: 4px;
                 transition: opacity .2s ease-in-out, visibility .2s ease-in-out;
@@ -799,7 +810,7 @@
 
                 @media (max-width: 560px) {
                     right: 8px;
-                    bottom: 16px;
+                    bottom: 8px;
                 }
 
                 &.added {
@@ -817,6 +828,13 @@
                 opacity: 1;
                 visibility: visible;
                 transition: opacity .2s ease-in-out, visibility .2s ease-in-out;
+            }
+
+            &__cart:hover,
+            &__cart:hover path {
+                color: #000;
+                fill: #252525;
+                // stroke: #000;
             }
 
             &.dark_mode &__title {

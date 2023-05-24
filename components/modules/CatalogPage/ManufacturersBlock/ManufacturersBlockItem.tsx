@@ -1,12 +1,12 @@
 import { motion } from 'framer-motion'
 import cn from 'classnames'
 import { useTheme } from '@/hooks/useTheme'
-import styles from '../../templates/CatalogPage/CatalogPage.module.scss'
+import styles from '../../../templates/CatalogPage/CatalogPage.module.scss'
 import {
   IFilterCheckboxItem,
   IManufacturersBlockItemProps,
 } from '@/types/catalog'
-import DeleteSvg from '@/components/elements/DeleteSvg'
+import SVG from '@/components/elements/ui/svg'
 const ManufacturersBlockItem = ({
   event,
   item,
@@ -30,7 +30,7 @@ const ManufacturersBlockItem = ({
         className={cn(styles.manufacturers__list__item__btn, darkModeClass)}
       >
         <span>
-          <DeleteSvg />
+          <SVG.DeleteSvg />
         </span>
       </button>
     </motion.li>

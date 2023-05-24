@@ -1,3 +1,4 @@
+import { IQueryFull } from './query';
 import { Event } from 'effector-next'
 
 export interface IManufacturersBlockProps {
@@ -13,11 +14,12 @@ export interface IManufacturersBlockItemProps {
 
 export interface IQueryParams {
     offset: string
-    firs: string // сортировка по
+    first: string // сортировка по
     boiler: string
     parts: string
     priceFrom: string
     priceTo: string
+    partId: string
 }
 
 export interface IFilterCheckboxItem {
@@ -54,6 +56,8 @@ export interface ICatalogFiltersProps
     setIsFilterInQuery: (arg0: boolean) => void
     closePopup: VoidFunction
     filtersMobileOpen: boolean
+    applyFilters: (arg0: IQueryFull) => void
+    spinner: boolean
 }
 
 export type IPriceRangeProps = ICatalogBaseTypes

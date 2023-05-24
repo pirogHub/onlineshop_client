@@ -1,4 +1,4 @@
-import { FC, PropsWithChildren } from 'react'
+import { FC, PropsWithChildren, useEffect } from 'react'
 
 import styles from './Header.module.scss'
 import { useTheme } from '@/hooks/useTheme'
@@ -9,11 +9,18 @@ import SearchInput from '@/components/elements/SearchInput/SearchInput'
 import ModeToggler from '@/components/elements/ModeToggler/ModeToggler'
 import CartPopup from './CartPopup/CartPopup'
 import { useMediaQuery } from '@/hooks/useMediaQuery'
+import { useRouter } from 'next/router'
+import { setDisableCart } from '@/context/shopping-cart'
 
 const HeaderBottom: FC<PropsWithChildren> = () => {
   const darkModeClass = useTheme(styles)
 
   const isMedia950 = useMediaQuery(950)
+  const router = useRouter()
+  useEffect(() => {
+    if (router.pathname === '/order') setDisableCart(true)
+    else setDisableCart(false)
+  }, [router.pathname])
 
   return (
     <div className={styles.header__bottom}>
@@ -31,11 +38,6 @@ const HeaderBottom: FC<PropsWithChildren> = () => {
         </h1>
         <div className={cn(styles.header__search, darkModeClass)}>
           <SearchInput />
-          <button className={cn(styles.header__search__btn, darkModeClass)}>
-            <span className={cn(styles.header__span, darkModeClass)}>
-              <MaterialIcon name="MdSearch" />
-            </span>
-          </button>
         </div>
         <div className={cn(styles.header__shopping_cart, darkModeClass)}>
           {!isMedia950 && <ModeToggler />}

@@ -77,7 +77,7 @@ const HeaderTop: FC = () => {
           <ul className={styles.header__nav__list}>
             <NavItem
               onClick={closePopup}
-              href="shopping-payment"
+              href="shipping-payment"
               title="Доставка и оплата"
             />
             <NavItem onClick={closePopup} href="about" title="О компании" />
@@ -85,7 +85,7 @@ const HeaderTop: FC = () => {
             <NavItem onClick={closePopup} href="contacts" title="Контакты" />
             <NavItem
               onClick={closePopup}
-              href="wholesale-byers"
+              href="wholesale-buyers"
               title="Отптовым покупателям"
             />
             {isMedia950 && [

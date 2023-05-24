@@ -1,7 +1,7 @@
 import { useTheme } from '@/hooks/useTheme'
 import cn from 'classnames'
 import { AnimatePresence, motion } from 'framer-motion'
-import styles from '../../templates/CatalogPage/CatalogPage.module.scss'
+import styles from '../../../templates/CatalogPage/CatalogPage.module.scss'
 import { IManufacturersBlockProps } from '@/types/catalog'
 import ManufacturersBlockItem from './ManufacturersBlockItem'
 import { updateBoilerManufacturer } from '@/context/boilerParts'
@@ -11,6 +11,7 @@ const ManufacturersBlock = ({
   manufacturersList,
 }: IManufacturersBlockProps) => {
   const darkModeClass = useTheme(styles)
+
   const checkedItems =
     manufacturersList && manufacturersList.length
       ? manufacturersList.filter((item) => item.checked === true)

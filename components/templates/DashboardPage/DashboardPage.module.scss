@@ -248,7 +248,7 @@
     &__title {
         font-family: 'Raleway';
         font-weight: 500;
-        font-size: 55px;
+        font-size: 45px;
         margin: 0;
         margin-bottom: 48px;
         color: #2d2d2d;
@@ -279,11 +279,11 @@
         box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.1);
         border-radius: 4px;
         overflow: hidden;
-        padding: 24px 16px;
+        padding: 18px 16px;
         transition: transform .2s ease-in-out, box-shadow .2s ease-in-out;
 
         @media (max-width: 560px) {
-            padding: 16px 8px;
+            padding: 14px 8px;
         }
 
         &:hover {
@@ -305,7 +305,7 @@
         &__title {
             margin: 0;
             font-weight: 400;
-            margin-bottom: 24px;
+            margin-bottom: 12px;
             font-size: 18px;
             color: #4E4C4C;
             text-overflow: ellipsis;
@@ -320,13 +320,16 @@
 
         &__code {
             display: block;
-            margin-bottom: 24px;
+            margin-bottom: 10px;
             font-size: 14px;
             color: #7B7B7B;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            overflow: hidden;
 
             @media (max-width: 560px) {
-                font-size: 13px;
-                margin-bottom: 16px;
+                font-size: 12px;
+                margin-bottom: 8px;
             }
         }
 

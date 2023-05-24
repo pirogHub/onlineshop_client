@@ -48,7 +48,7 @@ const DashboardSlider = ({
     slider.forEach((item) => {
       const list = item.querySelector('.slick-list') as HTMLElement
 
-      list.style.height = isMedia560 ? '276px' : '390px'
+      list.style.height = isMedia560 ? '320px' : '410px'
       list.style.padding = '0 5px'
       list.style.marginRight = isMedia560 ? '-8px' : isMedia800 ? '-15px' : '0'
     })
@@ -57,8 +57,8 @@ const DashboardSlider = ({
   return (
     <Slider {...settings} className={styles.dashboard__slider}>
       {spinner ? (
-        [...Array(8)].map((item) => (
-          <Skeleton.SkeletonDiv style={width} key={item} />
+        [...Array(8)].map((item, idx) => (
+          <Skeleton.SkeletonDiv style={width} key={idx} />
         ))
       ) : items.length ? (
         items.map((item) => (
@@ -76,6 +76,16 @@ const DashboardSlider = ({
                   {item.name}
                 </h3>
               </Link>
+              <span
+                className={cn(styles.dashboard__slide__code, darkModeClass)}
+              >
+                Произв. : {item.boiler_manufacturer}
+              </span>
+              <span
+                className={cn(styles.dashboard__slide__code, darkModeClass)}
+              >
+                Запчасти : {item.parts_manufacturer}
+              </span>
               <span
                 className={cn(styles.dashboard__slide__code, darkModeClass)}
               >

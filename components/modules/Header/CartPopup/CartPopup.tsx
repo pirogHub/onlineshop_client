@@ -9,39 +9,87 @@ import { useTheme } from '@/hooks/useTheme'
 
 import cn from 'classnames'
 import { AnimatePresence, motion } from 'framer-motion'
-import { $shoppingCart } from '@/context/shopping-cart'
+import {
+  $disableCart,
+  $shoppingCart,
+  $totalPrice,
+  setShoppingCart,
+  setTotalPrice,
+} from '@/context/shopping-cart'
 
 import { useStore } from 'effector-react'
 import Link from 'next/link'
+import { getCartItemsFx } from '@/app/api/shopping-cart'
+import { toast } from 'react-toastify'
+import { $user } from '@/context/user'
+import { formatPrice } from '@/utils/common'
 
 const CartPopup = forwardRef<HTMLDivElement, IWrappedComponentProps>(
   ({ open, setOpen }, ref) => {
     const darkModeClass = useTheme(styles)
     const shoppingCart = useStore($shoppingCart)
+    const user = useStore($user)
+    const disableCart = useStore($disableCart)
+    const totalPrice = useStore($totalPrice)
 
     const toggleCartPopup = () => {
-      console.log('toggleCartPopup')
-
       setOpen(!open)
     }
 
     useEffect(() => {
-      console.log('toggleCartPopup', open)
-    }, [open])
+      loadCartItems()
+    }, [])
+    useEffect(() => {
+      setTotalPrice(
+        shoppingCart.reduce(
+          (defaultCount, item) => defaultCount + item.total_price,
+          0
+        )
+      )
+    }, [shoppingCart])
+
+    const loadCartItems = async () => {
+      try {
+        const cartItems = await getCartItemsFx(`/shopping-cart/${user.userId}`)
+
+        setShoppingCart(cartItems)
+      } catch (error) {
+        toast.error((error as Error).message)
+      }
+    }
 
     return (
       <div className={styles.cart} ref={ref}>
-        <button onClick={toggleCartPopup} className={styles.cart__btn}>
-          {!!shoppingCart.length && (
-            <span className={styles.cart__btn__count}>
-              {shoppingCart.length}
+        {disableCart ? (
+          <button
+            style={{ cursor: 'auto' }}
+            className={cn(styles.cart__btn, darkModeClass)}
+          >
+            <span className={cn(styles.cart__svg, darkModeClass)}>
+              <MaterialIcon name="IoCartOutline" />
             </span>
-          )}
-          <span className={cn(styles.cart__svg, darkModeClass)}>
-            <MaterialIcon name="IoCartOutline" />
-          </span>
-          <span className={cn(styles.cart__text, darkModeClass)}>Корзина</span>
-        </button>
+            <span className={cn(styles.cart__text, darkModeClass)}>
+              Корзина
+            </span>
+          </button>
+        ) : (
+          <button
+            onClick={toggleCartPopup}
+            className={cn(styles.cart__btn, darkModeClass)}
+          >
+            {!!shoppingCart.length && (
+              <span className={styles.cart__btn__count}>
+                {shoppingCart.length}
+              </span>
+            )}
+            <span className={cn(styles.cart__svg, darkModeClass)}>
+              <MaterialIcon name="IoCartOutline" />
+            </span>
+            <span className={cn(styles.cart__text, darkModeClass)}>
+              Корзина
+            </span>
+          </button>
+        )}
         <AnimatePresence>
           {open && (
             <motion.ul
@@ -86,7 +134,7 @@ const CartPopup = forwardRef<HTMLDivElement, IWrappedComponentProps>(
                       darkModeClass
                     )}
                   >
-                    Общая сумма заказа
+                    Общая сумма заказа:
                   </span>
                   <span
                     className={cn(
@@ -94,20 +142,20 @@ const CartPopup = forwardRef<HTMLDivElement, IWrappedComponentProps>(
                       darkModeClass
                     )}
                   >
-                    0
+                    {formatPrice(totalPrice)} P
                   </span>
-                  <Link href="/order">
-                    <button
-                      className={cn(
-                        styles.cart__popup__footer__btn,
-                        darkModeClass
-                      )}
-                      disabled={!shoppingCart.length}
-                    >
-                      Оформить заказ
-                    </button>
-                  </Link>
                 </div>
+                <Link href="/order">
+                  <button
+                    className={cn(
+                      styles.cart__popup__footer__btn,
+                      darkModeClass
+                    )}
+                    disabled={!shoppingCart.length}
+                  >
+                    Оформить заказ
+                  </button>
+                </Link>
               </div>
             </motion.ul>
           )}

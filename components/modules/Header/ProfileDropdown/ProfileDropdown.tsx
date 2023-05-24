@@ -21,8 +21,6 @@ const ProfileDropdown = forwardRef<HTMLDivElement, IWrappedComponentProps>(
     const user = useStore($user)
     const router = useRouter()
     const toggleProfileDropdown = () => {
-      console.log('toggleProfileDropdown')
-
       setOpen(!open)
     }
 
@@ -30,10 +28,6 @@ const ProfileDropdown = forwardRef<HTMLDivElement, IWrappedComponentProps>(
       await logoutFx('/users/logout')
       router.push('/')
     }
-
-    useEffect(() => {
-      console.log('toggleProfileDropdown', open)
-    }, [open])
 
     return (
       <div className={cn(styles.profile, darkModeClass)} ref={ref}>

@@ -30,3 +30,4 @@ export const partsManufacturers = [
     'Gasoline',
     'Croatia',
 ].map(createManufacturerCheckboxObj)
+

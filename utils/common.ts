@@ -35,6 +35,19 @@ export const idGenerator = () => {
 export const getQueryParamOnFirstRender = (
     queryName: string,
     router: NextRouter
-) =>
-    router.query[queryName] ||
+) => router.query[queryName] ||
     router.asPath.match(new RegExp(`[&?]${queryName}=(.*)(&|$)`))
+
+
+export const toggleClassNamesForOverlayAndBody = (
+    overlayClassName = 'open'
+) => {
+    document.querySelector('.overlay')?.classList.toggle(overlayClassName)
+    document.querySelector('.body')?.classList.toggle('overflow-hidden')
+}
+
+export const removeClassNamesForOverlayAndBody = () => {
+    document.querySelector('.overlay')?.classList.remove('open')
+    document.querySelector('.overlay')?.classList.remove('open-search')
+    document.querySelector('.body')?.classList.remove('overflow-hidden')
+}

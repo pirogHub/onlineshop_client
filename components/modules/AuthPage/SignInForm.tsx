@@ -14,10 +14,11 @@ import { $mode } from '@/context/mode'
 import { useStore } from 'effector-react'
 import { useRouter } from 'next/router'
 import NameInput from '@/components/elements/AuthPage/NameInput'
+import { useTheme } from '@/hooks/useTheme'
 const SignInForm = () => {
   const [spinner, setSpinner] = useState(false)
-  const mode = useStore($mode)
-  const darkModeClass = mode === 'dark' ? `${styles.dark_mode}` : ''
+
+  const darkModeClass = useTheme(styles)
   const route = useRouter()
   const {
     register,

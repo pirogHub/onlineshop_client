@@ -1,10 +1,13 @@
-import { FC } from 'react'
-
+import cn from 'classnames'
 import styles from './Spinner.module.scss'
+import { useTheme } from '@/hooks/useTheme'
 
 const Spinner = ({ style }: { style?: any }) => {
-  if (style) return <div className={styles.spinner} />
-  else return <div style={style} className={styles.spinner} />
+  const darkModeClass = useTheme(styles)
+
+  if (style) return <div className={cn(styles.spinner, darkModeClass)} />
+  else
+    return <div style={style} className={cn(styles.spinner, darkModeClass)} />
 }
 
 export default Spinner

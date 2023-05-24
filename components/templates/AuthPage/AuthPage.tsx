@@ -4,8 +4,8 @@ import SignUpForm from '@/components/modules/AuthPage/SignUpForm'
 import SignInForm from '@/components/modules/AuthPage/SignInForm'
 import { useMediaQuery } from '@/hooks/useMediaQuery'
 import ModeToggler from '@/components/elements/ModeToggler/ModeToggler'
-import { $mode } from '@/context/mode'
-import { useStore } from 'effector-react'
+import cn from 'classnames'
+import { useTheme } from '@/hooks/useTheme'
 
 const AuthPage = () => {
   const isMedia800 = useMediaQuery(800)
@@ -16,8 +16,7 @@ const AuthPage = () => {
   const switchCircle2 = useRef() as MutableRefObject<HTMLDivElement>
   const aContainer = useRef() as MutableRefObject<HTMLDivElement>
   const bContainer = useRef() as MutableRefObject<HTMLDivElement>
-  const mode = useStore($mode)
-  const darkModeClass = mode === 'dark' ? `${styles.dark_mode}` : ''
+  const darkModeClass = useTheme(styles)
 
   const switchForm = () => {
     switchCtn.current.classList.add(styles.is_gx)
@@ -43,7 +42,7 @@ const AuthPage = () => {
 
       <div className={styles.mode_toggle}>{/* <ModeToggler /> */}</div>
       <div
-        className={`${styles.container} ${styles.a_container} ${darkModeClass}`}
+        className={cn(styles.container, styles.a_container, darkModeClass)}
         id="a-container"
         ref={aContainer}
       >
@@ -52,7 +51,7 @@ const AuthPage = () => {
         </div>
       </div>
       <div
-        className={`${styles.container} ${styles.b_container} ${darkModeClass}`}
+        className={cn(styles.container, styles.b_container, darkModeClass)}
         id="b-container"
         ref={bContainer}
       >
@@ -61,28 +60,40 @@ const AuthPage = () => {
         </div>
       </div>
       <div
-        className={`${styles.switch} ${darkModeClass}`}
+        className={cn(styles.switch, darkModeClass)}
         id="switch-cnt"
         ref={switchCtn}
       >
         <div
-          className={`${styles.switch__circle} ${darkModeClass}`}
+          className={cn(styles.switch__circle, darkModeClass)}
           ref={switchCircle1}
         />
         <div
-          className={`${styles.switch__circle} ${styles.switch__circle__t} ${darkModeClass}`}
+          className={cn(
+            styles.switch__circle,
+            styles.switch__circle__t,
+            darkModeClass
+          )}
           ref={switchCircle2}
         />
         <div className={styles.switch__container} id="switch-c1" ref={switchC1}>
           {!isMedia800 && (
             <>
               <h2
-                className={`${styles.switch__title} ${styles.title} ${darkModeClass}`}
+                className={cn(
+                  styles.switch__title,
+                  styles.title,
+                  darkModeClass
+                )}
               >
                 Добро пожаловать!
               </h2>
               <p
-                className={`${styles.switch__description} ${styles.description} ${darkModeClass}`}
+                className={cn(
+                  styles.switch__description,
+                  styles.description,
+                  darkModeClass
+                )}
               >
                 Чтобы оставаться на связи с нами, пожалуйста, войдите в свой
                 аккаунт
@@ -91,25 +102,38 @@ const AuthPage = () => {
           )}
           <button
             onClick={switchForm}
-            className={`${styles.switch__button} ${styles.button} ${styles.switch__btn} ${darkModeClass}`}
+            className={cn(
+              styles.switch__button,
+              styles.button,
+              styles.switch__btn,
+              darkModeClass
+            )}
           >
             Войти
           </button>
         </div>
         <div
-          className={`${styles.switch__container} ${styles.is_hidden}`}
+          className={cn(styles.switch__container, styles.is_hidden)}
           id="switch-c2"
           ref={switchC2}
         >
           {!isMedia800 && (
             <>
               <h2
-                className={`${styles.switch__title} ${styles.title} ${darkModeClass}`}
+                className={cn(
+                  styles.switch__title,
+                  styles.title,
+                  darkModeClass
+                )}
               >
                 Привет, друг!
               </h2>
               <p
-                className={`${styles.switch__description} ${styles.description} ${darkModeClass}`}
+                className={cn(
+                  styles.switch__description,
+                  styles.description,
+                  darkModeClass
+                )}
               >
                 Зарегистрируйтесь и начните путешествие с нами
               </p>
@@ -117,7 +141,12 @@ const AuthPage = () => {
           )}
           <button
             onClick={switchForm}
-            className={`${styles.switch__button} ${styles.button} ${styles.switch__btn} ${darkModeClass}`}
+            className={cn(
+              styles.switch__button,
+              styles.button,
+              styles.switch__btn,
+              darkModeClass
+            )}
           >
             Зарегистрироваться
           </button>

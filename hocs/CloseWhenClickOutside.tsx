@@ -23,8 +23,6 @@ export function CloseWhenClickOutside(
 
     useEffect(() => {
       const handleClickOutside = (e: MouseEvent) => {
-        console.log('handleClickOutside')
-
         if (!ref.current.contains(e.target as HTMLDivElement)) {
           setOpen(false)
         }

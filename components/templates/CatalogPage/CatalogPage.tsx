@@ -9,9 +9,11 @@ import { getBoilerPartsFx } from '@/app/api/boilerparts'
 import {
   $boilerManufacturers,
   $boilerParts,
+  $filteredBoilerParts,
   $partsManufacturers,
   setBoilerManufacturers,
   setBoilerParts,
+  setFilteredBoilerParts,
   setPartsManufacturers,
   updateBoilerManufacturer,
   updatePartsManufacturer,
@@ -25,6 +27,10 @@ import { IQueryParams } from '@/types/catalog'
 import { useRouter } from 'next/router'
 import { IBoilerParts } from '@/types/boilerparts'
 import CatalogFilters from '@/components/modules/CatalogPage/CatalogFilters/CatalogFilters'
+import { IQueryFull } from '@/types/query'
+import { checkQueryParams, createQuery } from '@/utils/aboutQuery'
+import { usePopup } from '@/hooks/usePopups'
+import SVG from '@/components/elements/ui/svg'
 
 const CatalogPage = ({ query }: { query: IQueryParams }) => {
   const router = useRouter()
@@ -43,11 +49,12 @@ const CatalogPage = ({ query }: { query: IQueryParams }) => {
   const pagesCount = Math.ceil(boilerParts.count / 20)
   const partsManufacturers = useStore($partsManufacturers)
   const boilerManufacturers = useStore($boilerManufacturers)
-
-  const isAnyBoilerManufacturerChecked = partsManufacturers.some(
+  const filteredBoilerParts = useStore($filteredBoilerParts)
+  const [isFilterInQuery, setIsFilterInQuery] = useState(false)
+  const isAnyBoilerManufacturerChecked = boilerManufacturers.some(
     (item) => item.checked
   )
-  const isAnyPartsManufacturerChecked = boilerManufacturers.some(
+  const isAnyPartsManufacturerChecked = partsManufacturers.some(
     (item) => item.checked
   )
   const resetFilterBtnDisabled = !(
@@ -56,123 +63,108 @@ const CatalogPage = ({ query }: { query: IQueryParams }) => {
     isAnyPartsManufacturerChecked
   )
 
-  const loadBoilerParts = async () => {
+  const { toggleOpen, closePopup, open } = usePopup()
+
+  const updateParamsAndFiltersFromQuery = async (
+    callback: VoidFunction, // устанавливаем значения из query в фильтры
+    path: string // делаем запрос по этому пути
+  ) => {}
+
+  useEffect(() => {
+    getBoilerPartsByQuery()
+  }, [])
+
+  const loadBoilerParts = async (queryFull?: IQueryFull) => {
     try {
       setSpinner(true)
-      const data = await getBoilerPartsFx('/boiler-parts?limit=20&offset=0')
+      let data: IBoilerParts = {} as IBoilerParts
 
-      if (!isValidOffset) {
-        router.replace({
-          query: {
-            offset: 1,
-          },
-        })
-        resetPagination(data)
-        return
+      console.log('queryFull', queryFull)
+      let newQuery = 'limit=20&offset=0'
+      let newQueryObj = router.query as any
+      if (queryFull) {
+        newQuery = queryFull.query
+        newQueryObj = queryFull.queryObj as any
+        // data = await getBoilerPartsFx(`/boiler-parts?${queryFull.query}`)
+        // router.push(
+        //   {
+        //     query: {
+        //       // ...router.query,
+        //       ...queryFull.queryObj,
+        //       offset: data.offset,
+        //     },
+        //   },
+        //   undefined,
+        //   { shallow: true }
+        // )
+        // setFilteredBoilerParts(data as any)
+      } else {
+        //   data = await getBoilerPartsFx('/boiler-parts?limit=20&offset=0')
+        //   router.push(
+        //     {
+        //       query: {
+        //         ...router.query,
+        //         offset: data.offset,
+        //       },
+        //     },
+        //     undefined,
+        //     { shallow: true }
+        //   )
+        // }
       }
 
-      if (isValidOffset) {
-        if (+query.offset > Math.ceil(data.count / 20)) {
-          router.push(
-            {
-              query: {
-                ...query,
-                offset: 1,
-              },
-            },
-            undefined,
-            { shallow: true }
-          )
-        }
-        resetPagination(data)
-        return
-      }
-
-      const offset = +query.offset - 1
-      const result = await getBoilerPartsFx(
-        `/boiler-parts?limit=20&offset=${offset}`
+      data = await getBoilerPartsFx(`/boiler-parts?${newQuery}`)
+      router.push(
+        { query: { ...newQueryObj, offset: data.offset } },
+        undefined,
+        { shallow: true }
       )
-
-      setCurrentPage(offset)
-
-      setBoilerParts(result)
+      resetPagination(data, data.offset)
     } catch (error) {
       toast.error((error as Error).message)
     } finally {
-      setSpinner(false)
+      setTimeout(() => setSpinner(false), 500)
     }
   }
 
   useEffect(() => {
     loadBoilerParts()
-  }, [])
+  }, [isFilterInQuery])
 
-  const resetPagination = (data: IBoilerParts) => {
-    setCurrentPage(0)
+  const resetPagination = (data: IBoilerParts, currentPage = 0) => {
+    setCurrentPage(currentPage)
     setBoilerParts(data)
   }
 
+  const getBoilerPartsByQuery = (selected = 0) => {
+    const { preQueryObj } = checkQueryParams(router)
+
+    const queryFull = createQuery({
+      priceRange: preQueryObj.priceRange,
+      boilerManufacturersStringArr: preQueryObj.boilers,
+      partsManufacturersStringArr: preQueryObj.parts,
+      limit: 20,
+      currentPage: selected,
+      isPriceRangeChanged: true,
+    })
+
+    loadBoilerParts(queryFull)
+  }
   const handlePageChange = async ({ selected }: { selected: number }) => {
-    try {
-      setSpinner(true)
-      const data = await getBoilerPartsFx('/boiler-parts?limit=20&offset=0')
+    console.log('handlePageChange')
+    let newOffset = selected
 
-      if (selected > pagesCount) {
-        // resetPagination(isFilterInQuery ? filteredBoilerParts : data)
-        resetPagination(data)
-        return
-      }
-
-      if (isValidOffset && +query.offset > Math.ceil(data.count / 2)) {
-        // resetPagination(isFilterInQuery ? filteredBoilerParts : data)
-        resetPagination(data)
-        return
-      }
-
-      // const { isValidBoilerQuery, isValidPartsQuery, isValidPriceQuery } =
-      // checkQueryParams(router)
-
-      // const result = await getBoilerPartsFx(
-      //   `/boiler-parts?limit=20&offset=${selected}${
-      //     isFilterInQuery && isValidBoilerQuery
-      //       ? `&boiler=${router.query.boiler}`
-      //       : ''
-      //   }${
-      //     isFilterInQuery && isValidPartsQuery
-      //       ? `&parts=${router.query.parts}`
-      //       : ''
-      //   }${
-      //     isFilterInQuery && isValidPriceQuery
-      //       ? `&priceFrom=${router.query.priceFrom}&priceTo=${router.query.priceTo}`
-      //       : ''
-      //   }`
-      // )
-      const result = await getBoilerPartsFx(
-        `/boiler-parts?limit=20&offset=${selected}`
-      )
-      router.push(
-        {
-          query: {
-            ...router.query,
-            offset: selected + 1,
-          },
-        },
-        undefined,
-        { shallow: true }
-      )
-
-      setCurrentPage(selected)
-      setBoilerParts(result)
-    } catch (error) {
-      toast.error((error as Error).message)
-    } finally {
-      setTimeout(() => setSpinner(false), 1000)
+    if (selected > pagesCount) {
+      newOffset = pagesCount
     }
+    console.log('newOffset', newOffset)
+    getBoilerPartsByQuery(newOffset)
   }
 
   const resetFilters = async () => {
     try {
       const data = await getBoilerPartsFx('/boiler-parts?limit=20&offset=0')
+      router.push({ query: { first: 'cheap' } }, undefined, { shallow: true })
       setBoilerManufacturers(
         boilerManufacturers.map((item) => ({ ...item, checked: false }))
       )
@@ -220,9 +212,20 @@ const CatalogPage = ({ query }: { query: IQueryParams }) => {
               disabled={resetFilterBtnDisabled}
               className={cn(styles.catalog__top__reset, darkModeClass)}
             >
-              Сбросить фильтр
+              Сбросить фильтры
             </button>
-            <FilterSelect />
+            <button
+              className={styles.catalog__top__mobile_btn}
+              onClick={toggleOpen}
+            >
+              <span className={styles.catalog__top__mobile_btn__svg}>
+                <SVG.FilterSvg />
+              </span>
+              <span className={styles.catalog__top__mobile_btn__text}>
+                Фильтры
+              </span>
+            </button>
+            <FilterSelect setSpinner={setSpinner} />
           </div>
         </div>
         <div className={cn(styles.catalog__bottom, darkModeClass)}>
@@ -232,10 +235,14 @@ const CatalogPage = ({ query }: { query: IQueryParams }) => {
               setIsPriceRangeChanged={setIsPriceRangeChanged}
               setPriceRange={setPriceRange}
               resetFilterBtnDisabled={resetFilterBtnDisabled}
-              applyFilters={() => {}}
+              applyFilters={loadBoilerParts}
               resetFilters={resetFilters}
-              spinner={spinner}
               isPriceRangeChanged={isPriceRangeChanged}
+              setIsFilterInQuery={setIsFilterInQuery}
+              currentPage={currentPage}
+              filtersMobileOpen={open}
+              closePopup={closePopup}
+              spinner={spinner}
             />
             {spinner ? (
               <Skeleton.SkeletonUl count={8} />

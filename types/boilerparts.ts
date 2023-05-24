@@ -17,4 +17,5 @@ export interface IBoilerPart {
 export interface IBoilerParts {
     count: number
     rows: IBoilerPart[]
+    offset: number
 }

@@ -6,9 +6,12 @@ import { formatPrice } from '@/utils/common'
 import Link from 'next/link'
 
 import cn from 'classnames'
+import { useStore } from 'effector-react'
+import { $totalPrice } from '@/context/shopping-cart'
 
 const CartAlert = ({ count, closeAlert }: ICartAlertProps) => {
   const darkModeClass = useTheme(styles)
+  const totalPrice = useStore($totalPrice)
 
   const showCountMessage = (count: string) => {
     if (count.endsWith('1')) {
@@ -28,7 +31,7 @@ const CartAlert = ({ count, closeAlert }: ICartAlertProps) => {
         <span>
           В корзине {count} {showCountMessage(`${count}`)}
         </span>
-        <span> На сумму {formatPrice(0)}</span>
+        <span> На сумму {formatPrice(totalPrice || 0)} P</span>
       </div>
       <div className={cn(styles.dashboard__alert__right, darkModeClass)}>
         <Link

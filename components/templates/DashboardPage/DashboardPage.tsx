@@ -48,6 +48,14 @@ const DashboardPage: FC<PropsWithChildren> = () => {
     loadBoilerPArts()
   }, [])
 
+  useEffect(() => {
+    if (shoppingCart.length) {
+      setShowAlert(true)
+      return
+    }
+    setShowAlert(false)
+  }, [shoppingCart.length])
+
   return (
     <section className={styles.dashboard}>
       <div className={cn('container', styles.dashboard__container)}>
@@ -59,16 +67,22 @@ const DashboardPage: FC<PropsWithChildren> = () => {
               exit={{ opacity: 0 }}
               className={cn(styles.dashboard__alert, darkModeClass)}
             >
-              <CartAlert closeAlert={closeAlert} count={shoppingCart.length} />
+              <CartAlert
+                closeAlert={closeAlert}
+                count={shoppingCart.reduce(
+                  (defaultCount, item) => defaultCount + item.count,
+                  0
+                )}
+              />
             </motion.div>
           )}
         </AnimatePresence>
         <div className={styles.dashboard__brands}>
           <CustomSlider items={brandItems} />
         </div>
-        <h2 className={cn(styles.dashboard__title, darkModeClass)}>
+        <h3 className={cn(styles.dashboard__title, darkModeClass)}>
           Детали для газовых котлов
-        </h2>
+        </h3>
         <div className={styles.dashboard__parts}>
           <h3 className={cn(styles.dashboard__title, darkModeClass)}>
             Хиты продаж

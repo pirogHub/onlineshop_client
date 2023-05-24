@@ -2,7 +2,7 @@ import * as React from 'react'
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { IAccordion } from '@/types/common'
-
+import cn from 'classnames'
 const Accordion = ({
   children,
   title,
@@ -11,23 +11,34 @@ const Accordion = ({
   isMobileForFilters,
   hideArrowClass,
   isExpandedDefault,
+  callback,
+  boxShadowStyle,
 }: IAccordion) => {
   const [expanded, setExpanded] = useState(isExpandedDefault ? true : false)
 
-  const toggleAccordion = () => setExpanded(!expanded)
+  const toggleAccordion = () => {
+    if (callback) callback(expanded)
+    setExpanded(!expanded)
+  }
 
   return (
     <>
       {title ? (
         isMobileForFilters ? (
-          <button className={`${titleClass} ${hideArrowClass}`}>{title}</button>
+          <button
+            style={{ boxShadow: boxShadowStyle }}
+            className={`${titleClass} ${hideArrowClass}`}
+          >
+            {title}
+          </button>
         ) : (
           <motion.button
             initial={false}
             onClick={toggleAccordion}
-            className={`${titleClass} ${
+            className={cn(
+              titleClass,
               expanded ? (isMobileForFilters ? '' : arrowOpenClass) : ''
-            }`}
+            )}
           >
             {title}
           </motion.button>

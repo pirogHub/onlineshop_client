@@ -15,7 +15,11 @@ import {
 } from '@/context/boilerParts'
 import { useRouter } from 'next/router'
 
-const FilterSelect = () => {
+const FilterSelect = ({
+  setSpinner,
+}: {
+  setSpinner: (arg0: boolean) => void
+}) => {
   const mode = useStore($mode)
   const [categoryOption, setCategoryOption] = useState<SelectOptionType>(null)
   const router = useRouter()
@@ -58,6 +62,7 @@ const FilterSelect = () => {
   }, [boilerParts.rows, router.query.first])
 
   const handleSortOptionChange = (selectedOption: SelectOptionType) => {
+    setSpinner(true)
     setCategoryOption(selectedOption)
     switch ((selectedOption as IOption).value) {
       case 'Сначала дешевые':
@@ -73,6 +78,7 @@ const FilterSelect = () => {
         updateRoteParam('popular')
         break
     }
+    setTimeout(() => setSpinner(false), 1000)
   }
 
   return (
