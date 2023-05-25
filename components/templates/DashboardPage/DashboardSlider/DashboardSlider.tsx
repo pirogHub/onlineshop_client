@@ -62,20 +62,19 @@ const DashboardSlider = ({
         ))
       ) : items.length ? (
         items.map((item) => (
-          <div
+          <Link
+            href={goToPartPage ? `/catalog/${item.id}` : '/catalog'}
             className={cn(styles.dashboard__slide, darkModeClass)}
             key={item.id}
             style={width}
           >
             <img src={JSON.parse(item.images)[0]} alt={item.name} />
             <div className={cn(styles.dashboard__slide__inner, darkModeClass)}>
-              <Link href={goToPartPage ? `/catalog/${item.id}` : '/catalog'}>
-                <h3
-                  className={cn(styles.dashboard__slide__title, darkModeClass)}
-                >
-                  {item.name}
-                </h3>
-              </Link>
+              {/* <Link href={goToPartPage ? `/catalog/${item.id}` : '/catalog'}> */}
+              <h3 className={cn(styles.dashboard__slide__title, darkModeClass)}>
+                {item.name}
+              </h3>
+              {/* </Link> */}
               <span
                 className={cn(styles.dashboard__slide__code, darkModeClass)}
               >
@@ -97,7 +96,7 @@ const DashboardSlider = ({
                 {formatPrice(item.price)} P
               </span>
             </div>
-          </div>
+          </Link>
         ))
       ) : (
         <span>Список товаров пуст</span>
