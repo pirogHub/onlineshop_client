@@ -14,6 +14,7 @@ import { useState } from 'react'
 import { useRouter } from 'next/router'
 import NameInput from '@/components/elements/AuthPage/NameInput'
 import { useTheme } from '@/hooks/useTheme'
+import { setUser } from '@/context/user'
 const SignInForm = ({ linkToRedirect }: { linkToRedirect?: string }) => {
   const [spinner, setSpinner] = useState(false)
 
@@ -39,9 +40,12 @@ const SignInForm = ({ linkToRedirect }: { linkToRedirect?: string }) => {
         username: data.name,
         password: data.password,
       })
+      debugger
+      if (!userData) return
+      setUser(userData)
       resetField('name')
       resetField('password')
-
+      // setUser(userData)
       redirector()
     } catch (error) {
       showAuthError(error)

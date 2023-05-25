@@ -48,7 +48,11 @@ const useRedirectByUserCheck = (isAuthPage = false) => {
     })
 
     const checkUser = async () => {
-        const user = await checkUserAuthFx("/user/login-check")
+        const user = await checkUserAuthFx("/users/login-check")
+
+        if (user) {
+            setUser(user)
+        }
 
         const redirectQuery = getRedirectLink()
 
@@ -65,7 +69,7 @@ const useRedirectByUserCheck = (isAuthPage = false) => {
         }
 
         if (user) {
-            setUser(user)
+            // setUser(user)
             setShouldLoadContent(true)
             return
         }

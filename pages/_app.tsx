@@ -6,12 +6,19 @@ import { useEffect, useState } from 'react'
 import NextNProgress from 'nextjs-progressbar'
 
 import 'react-toastify/dist/ReactToastify.css'
+import { checkUserAuthFx } from '@/app/api/auth'
+import { useUser } from '@/hooks/useUser'
 
 const enhance = withHydrate()
 
 function App({ Component, pageProps }: AppProps) {
   const [mounted, setMounted] = useState(false)
 
+  const { checkUser } = useUser()
+
+  useEffect(() => {
+    checkUser()
+  })
   useEffect(() => {
     setMounted(true)
   }, [])

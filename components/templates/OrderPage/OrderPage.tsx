@@ -31,7 +31,7 @@ const OrderPage = () => {
   const shoppingCart = useStore($shoppingCart)
   const totalPrice = useStore($totalPrice)
   // const user = useStore($user)
-  const user = useUser()
+  const { user } = useUser()
   const userCity = useStore($userCity)
 
   const [agreement, setAgreement] = useState(false)
@@ -117,7 +117,6 @@ const OrderPage = () => {
 
         sessionStorage.removeItem('paymentId')
       } catch (error) {
-        console.log((error as Error).message)
         resetCart()
       }
     }

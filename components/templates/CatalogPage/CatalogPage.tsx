@@ -79,7 +79,6 @@ const CatalogPage = ({ query }: { query: IQueryParams }) => {
       setSpinner(true)
       let data: IBoilerParts = {} as IBoilerParts
 
-      console.log('queryFull', queryFull)
       let newQuery = 'limit=20&offset=0'
       let newQueryObj = router.query as any
       let newQueryObjForRouter = router.query as any
@@ -163,13 +162,11 @@ const CatalogPage = ({ query }: { query: IQueryParams }) => {
     loadBoilerParts(queryFull)
   }
   const handlePageChange = async ({ selected }: { selected: number }) => {
-    console.log('handlePageChange')
     let newOffset = selected
 
     if (selected > pagesCount) {
       newOffset = pagesCount
     }
-    console.log('newOffset', newOffset)
     getBoilerPartsByQuery(newOffset)
   }
 

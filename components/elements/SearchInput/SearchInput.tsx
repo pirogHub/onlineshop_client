@@ -88,8 +88,6 @@ const SearchInput = forwardRef<HTMLDivElement, IWrappedComponentPropsDo>(
     }
 
     const onFocusSearch = (e: FocusEvent<HTMLInputElement>) => {
-      console.log('e', e)
-
       // toggleClassNamesForOverlayAndBody('open-search')
       setToggleOverlay(TOGGLE_OVERLAY.ON)
     }

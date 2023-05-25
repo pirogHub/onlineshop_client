@@ -10,7 +10,7 @@ const NameInput = ({ register, errors }: IAuthPageInput) => {
           minLength: 2,
           maxLength: 15,
           pattern: {
-            value: /^[а-яА-яa-zA-zёЁ]*$/,
+            value: /^[а-яА-яa-zA-zёЁ0-9]*$/,
             message: 'Недопустимый символ',
           },
         })}

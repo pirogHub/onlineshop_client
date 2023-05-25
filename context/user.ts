@@ -6,6 +6,7 @@ const user = createDomain()
 export const setUser = user.createEvent<IUser>()
 
 export const setUserCity = user.createEvent<{ city: string; street: string }>()
+export const setUserExpiresIn = user.createEvent<number>()
 
 export const $user = user.createStore<IUser>({} as IUser)
     .on(setUser, (_, user) => user)
@@ -13,3 +14,6 @@ export const $user = user.createStore<IUser>({} as IUser)
 export const $userCity = user
     .createStore({ city: '', street: '' })
     .on(setUserCity, (_, city) => city)
+export const $userExipiresIn = user
+    .createStore(0)
+    .on(setUserExpiresIn, (_, time) => time)

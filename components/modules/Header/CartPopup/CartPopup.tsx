@@ -30,7 +30,7 @@ const CartPopup = forwardRef<HTMLDivElement, IWrappedComponentProps>(
   ({ open, setOpen }, ref) => {
     const darkModeClass = useTheme(styles)
     const shoppingCart = useStore($shoppingCart)
-    const user = useUser()
+    const { user } = useUser()
     const disableCart = useStore($disableCart)
     const totalPrice = useStore($totalPrice)
     useLoadShoppingCart()

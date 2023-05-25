@@ -28,7 +28,7 @@ const CatalogItem = ({ item }: { item: IBoilerPart }) => {
   const shoppingCart = useStore($shoppingCart)
   const isInCart = shoppingCart.some((cartItem) => cartItem.partId === item.id)
 
-  const user = useUser()
+  const { user } = useUser()
   const router = useRouter()
 
   const toggleCart = (e: MouseEvent<HTMLButtonElement>) => {

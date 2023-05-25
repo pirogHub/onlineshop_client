@@ -15,8 +15,9 @@ import { useUser } from './useUser';
 // }
 
 export const useLoadShoppingCart = () => {
-    const user = useUser()
+    const { user } = useUser()
     const loadCartItems = async () => {
+        // debugger
         if (user !== false) {
             try {
                 const cartItems = await getCartItemsFx(`/shopping-cart/${user.userId}`)

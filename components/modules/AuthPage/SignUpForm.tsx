@@ -15,6 +15,7 @@ import Spinner from '@/components/elements/Spinner/Spinner'
 
 import { useRouter } from 'next/router'
 import { useTheme } from '@/hooks/useTheme'
+import { setUser } from '@/context/user'
 const SignUpForm = ({ linkToRedirect }: { linkToRedirect?: string }) => {
   const [spinner, setSpinner] = useState(false)
 
@@ -41,6 +42,13 @@ const SignUpForm = ({ linkToRedirect }: { linkToRedirect?: string }) => {
       })
 
       if (!userData) return
+      // const newUserData = await signUpFx({
+      //   url: '/users/signup',
+      //   username: userData.name,
+      //   password: userData.password,
+      //   email: userData.email,
+      // })
+      setUser(userData)
       resetField('email')
       resetField('name')
       resetField('password')

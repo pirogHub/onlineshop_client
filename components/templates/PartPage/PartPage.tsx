@@ -36,7 +36,7 @@ const PartPage = () => {
   const spinnerSlider = useStore(getBoilerPartsFx.pending)
   // const user = useStore($user)
   const router = useRouter()
-  const user = useUser()
+  const { user } = useUser()
 
   const toggleToCart = () => {
     if (user !== false) toggleCartItem(user.username, boilerPart.id, isInCart)

@@ -1,9 +1,12 @@
 import AuthPage from '@/components/templates/AuthPage/AuthPage'
 import useRedirectByUserCheck from '@/hooks/useRedirectByUserCheck'
+import { useUser } from '@/hooks/useUser'
 import Head from 'next/head'
+import { useEffect } from 'react'
 
 export default function Auth() {
   const { shouldLoadContent, linkToRedirect } = useRedirectByUserCheck(true)
+
   return (
     <>
       <Head>

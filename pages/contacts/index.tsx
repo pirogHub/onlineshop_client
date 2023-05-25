@@ -1,13 +1,18 @@
 import Head from 'next/head'
-import { useCallback } from 'react'
+import { useCallback, useEffect } from 'react'
 import Layout from '@/components/layout/Layout'
 import ContactsPage from '@/components/templates/ContactsPage/ContactsPage'
 import Breadcrumbs from '@/components/modules/Breadcrumbs/Breadcrumbs'
+import { useUser } from '@/hooks/useUser'
 
 function Contacts() {
   const getDefaultTextGenerator = useCallback(() => 'Контакты', [])
   const getTextGenerator = useCallback((param: string) => ({}[param]), [])
+  // const { checkUser } = useUser()
 
+  // useEffect(() => {
+  //   checkUser()
+  // })
   return (
     <>
       <Head>
