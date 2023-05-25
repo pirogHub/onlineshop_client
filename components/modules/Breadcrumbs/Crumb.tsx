@@ -3,7 +3,7 @@ import { useStore } from 'effector-react'
 import Link from 'next/link'
 import { ICrumbProps } from '@/types/common'
 import { $mode } from '@/context/mode'
-import styles from '@/styles/breadcrumbs/index.module.scss'
+import styles from './Breadcrumbs.module.scss'
 import SVG from '@/components/elements/ui/svg'
 import cn from 'classnames'
 const Crumb = ({
@@ -38,7 +38,13 @@ const Crumb = ({
         >
           <SVG.CrumbArrowSvg />
         </span>
-        <span className={cn('last-crumb', styles.breadcrumbs__item__text)}>
+        <span
+          className={cn(
+            styles.breadcrumbs__item__text,
+            styles['last-crumb'],
+            darkModeClass
+          )}
+        >
           {text}
         </span>
       </a>

@@ -2,10 +2,12 @@
     list-style-type: none;
     margin: 0;
     padding: 0;
-    margin-bottom: 25px;
-    padding-top: 15px;
+    margin-block: 17px;
+    padding-top: 10px;
+
     display: flex;
     align-items: center;
+    font-size: 18px;
 
     &__item {
         &:not(:last-child) {
@@ -21,6 +23,16 @@
                 fill: #4E4C4C;
             }
 
+            & .home {
+                height: 28px;
+                width: 50px;
+                margin-right: -10px;
+
+                &:hover {
+                    fill: rgb(227, 181, 14);
+                }
+            }
+
             &.dark_mode svg {
                 fill: #f2f2f2;
             }
@@ -33,12 +45,28 @@
 
         &__text {
             font-weight: 500;
-            font-size: 14px;
+
             color: #4E4C4C;
         }
 
         &.dark_mode &__text {
             color: #f2f2f2;
         }
+
+
+        & .last-crumb {
+
+            color: #817d7d;
+            // color: #ce1212;
+            font-style: italic;
+
+            &.dark_mode {
+                color: #d1d0d0;
+            }
+        }
     }
+
+
+
+
 }

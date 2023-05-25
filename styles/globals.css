@@ -8,6 +8,10 @@ body {
   font-family: Roboto, sans-serif;
 }
 
+main {
+  padding-inline: 10px;
+}
+
 body.dark_mode {
   background-color: #222;
 }
@@ -102,11 +106,13 @@ svg {
     z-index: 10;
   }
 }
+
 .overlay.open-search {
   visibility: visible;
   opacity: 1;
   z-index: 12;
 }
+
 .slick-slide {
   margin: 0 8px;
 }
@@ -124,4 +130,9 @@ svg {
 .selected a {
   background-color: #1c629e;
   color: #f2f2f2;
+
+  &:hover {
+    background-color: #1c629e;
+    color: #f2f2f2;
+  }
 }

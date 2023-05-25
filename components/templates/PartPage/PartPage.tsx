@@ -23,6 +23,8 @@ import {
 import { useEffect } from 'react'
 import { toast } from 'react-toastify'
 import ImagesAccordion from '@/components/modules/PartImageList/ImagesAccordion'
+import { useRouter } from 'next/router'
+import { useUser } from '@/hooks/useUser'
 const PartPage = () => {
   const darkModeClass = useTheme(styles)
   const boilerPart = useStore($boilerPart)
@@ -32,10 +34,17 @@ const PartPage = () => {
   const isInCart = cartItems.some((item) => item.partId === boilerPart.id)
   const spinnerToggleCart = useStore(removeFromCartFx.pending)
   const spinnerSlider = useStore(getBoilerPartsFx.pending)
-  const user = useStore($user)
+  // const user = useStore($user)
+  const router = useRouter()
+  const user = useUser()
 
-  const toggleToCart = () =>
-    toggleCartItem(user.username, boilerPart.id, isInCart)
+  const toggleToCart = () => {
+    if (user !== false) toggleCartItem(user.username, boilerPart.id, isInCart)
+    else {
+      router.push(`/auth?redirect="${router.asPath}"`)
+      toast.warning('Войдите в систему, чтобы добавлять товары в корзину')
+    }
+  }
 
   useEffect(() => {
     loadBoilerPart()

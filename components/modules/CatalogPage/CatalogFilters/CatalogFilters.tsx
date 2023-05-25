@@ -18,7 +18,6 @@ import {
   setFilteredBoilerParts,
 } from '@/context/boilerParts'
 import { useRouter } from 'next/router'
-import { getBoilerPartsFx } from '@/app/api/boilerparts'
 import { createQuery } from '@/utils/aboutQuery'
 import CatalogFiltersMobile from './CatalogFiltersMobile/CatalogFiltersMobile'
 

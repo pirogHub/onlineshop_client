@@ -20,7 +20,7 @@ const ContactsPage = ({ isWholesaleBuyersPage = false }) => {
                 <span>
                   Условия оптовых заказов решаются индивидуально по телефону:{' '}
                 </span>
-                <span>+7 (555) 55-55-555</span>
+                <span>+0 (123) 45-67-89</span>
               </p>
               <p>
                 Либо опишите суть заказа в форме обртной связи и мы с вами
@@ -36,23 +36,23 @@ const ContactsPage = ({ isWholesaleBuyersPage = false }) => {
               </li>
               <li className={cn(styles.contacts__list__item, darkModeClass)}>
                 <span>Офис:</span>
-                <span> г. Москва, ул. ... д....</span>
+                <span> Lorem ipsum dolor sit amet.</span>
               </li>
               <li className={cn(styles.contacts__list__item, darkModeClass)}>
                 <span>Склад:</span>
-                <span> г. Москва, ул. ... д....</span>
+                <span> Lorem ipsum dolor sit amet.</span>
               </li>
               <li className={cn(styles.contacts__list__item, darkModeClass)}>
                 <span>График работы офиса:</span>
-                <span> пн-пс: с 8:00 до 22:00</span>
+                <span> пн-пс: с 24:00 до 24:00</span>
               </li>
               <li className={cn(styles.contacts__list__item, darkModeClass)}>
                 <span>Наш контактный телефон:</span>
-                <span> +7(8095) 555-55-55</span>
+                <span> +0 (123) 45 67 89</span>
               </li>
               <li className={cn(styles.contacts__list__item, darkModeClass)}>
                 <span>Время приемок завок:</span>
-                <span> Пн-Вс: с 8:00 до 22:00</span>
+                <span> Пн-Вс: с 24:00 до 24:00</span>
               </li>
               <li className={cn(styles.contacts__list__item, darkModeClass)}>
                 <span>Прием заказов электронным способом на сайте:</span>
@@ -62,7 +62,7 @@ const ContactsPage = ({ isWholesaleBuyersPage = false }) => {
                 <span>E-mail:</span>
                 <span className={styles.contacts__list__item__mail}>
                   {!isMobile560 && <SVG.MailSvg />}{' '}
-                  <span>info@zapchasti.com.ru</span>
+                  <span>email@email.email</span>
                 </span>
               </li>
             </ul>

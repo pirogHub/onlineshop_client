@@ -18,6 +18,7 @@ import { useTheme } from '@/hooks/useTheme'
 const OrderAccordion = ({
   setOrderIsReady,
   showDoneIcon,
+  isContinueBtnDisable,
 }: IOrderAccordionProps) => {
   const shoppingCart = useStore($shoppingCart)
   const totalPrice = useStore($totalPrice)
@@ -112,7 +113,8 @@ const OrderAccordion = ({
                 <button
                   className={styles.order__cart__footer__btn}
                   onClick={closeAccordion}
-                  disabled={!shoppingCart.length}
+                  // disabled={!shoppingCart.length}
+                  disabled={isContinueBtnDisable}
                 >
                   Продолжить
                 </button>

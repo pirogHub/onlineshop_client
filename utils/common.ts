@@ -42,12 +42,16 @@ export const getQueryParamOnFirstRender = (
 export const toggleClassNamesForOverlayAndBody = (
     overlayClassName = 'open'
 ) => {
-    document.querySelector('.overlay')?.classList.toggle(overlayClassName)
-    document.querySelector('.body')?.classList.toggle('overflow-hidden')
+    document.querySelector('.overlay')?.classList.add(overlayClassName)
+    document.querySelector('.body')?.classList.add('overflow-hidden')
 }
 
 export const removeClassNamesForOverlayAndBody = () => {
-    document.querySelector('.overlay')?.classList.remove('open')
-    document.querySelector('.overlay')?.classList.remove('open-search')
+
+
+    const ov = document.querySelector('.overlay')
+    ov?.classList.remove('open')
+    ov?.classList.remove('open-search')
+
     document.querySelector('.body')?.classList.remove('overflow-hidden')
 }

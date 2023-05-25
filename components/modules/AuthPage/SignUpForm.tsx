@@ -12,11 +12,10 @@ import { signUpFx } from '@/app/api/auth'
 import { showAuthError } from '@/utils/errors'
 import { useState } from 'react'
 import Spinner from '@/components/elements/Spinner/Spinner'
-import { $mode } from '@/context/mode'
-import { useStore } from 'effector-react'
+
 import { useRouter } from 'next/router'
 import { useTheme } from '@/hooks/useTheme'
-const SignUpForm = () => {
+const SignUpForm = ({ linkToRedirect }: { linkToRedirect?: string }) => {
   const [spinner, setSpinner] = useState(false)
 
   const darkModeClass = useTheme(styles)
@@ -27,7 +26,10 @@ const SignUpForm = () => {
     handleSubmit,
     resetField,
   } = useForm<IInputs>()
-
+  const redirector = () => {
+    if (linkToRedirect) route.push(`${linkToRedirect}`)
+    else route.push('/dashboard')
+  }
   const onSubmit = async (data: IInputs) => {
     try {
       setSpinner(true)
@@ -42,7 +44,7 @@ const SignUpForm = () => {
       resetField('email')
       resetField('name')
       resetField('password')
-      route.push('/dashboard')
+      redirector()
     } catch (error) {
       showAuthError(error)
     } finally {
@@ -63,6 +65,7 @@ const SignUpForm = () => {
       <PasswordInput register={register} errors={errors} />
       <button
         // onClick={switchForm}
+
         className={cn(
           styles.form__button,
           styles.button,

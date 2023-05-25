@@ -7,7 +7,7 @@ import {
   $totalPrice,
   setShoppingCart,
 } from '@/context/shopping-cart'
-import { formatPrice } from '@/utils/common'
+// import { formatPrice } from '@/utils/common'
 import Spinner from '@/components/elements/Spinner/Spinner'
 import { useEffect, useState } from 'react'
 import OrderAccordion from '@/components/modules/OrderPage/OrderAccordion'
@@ -16,12 +16,22 @@ import { useRouter } from 'next/router'
 import { removeFromCartFx } from '@/app/api/shopping-cart'
 import { toast } from 'react-toastify'
 import { $user, $userCity } from '@/context/user'
+import Products from './Products'
+import Agreement from './Agreement'
+import { useUser } from '@/hooks/useUser'
+
+enum WHERE_TO_REDIRECT {
+  TO_CATALOG,
+  TO_PAYMENT,
+  TO_AUTH,
+}
 
 const OrderPage = () => {
   const darkModeClass = useTheme(styles)
   const shoppingCart = useStore($shoppingCart)
   const totalPrice = useStore($totalPrice)
-  const user = useStore($user)
+  // const user = useStore($user)
+  const user = useUser()
   const userCity = useStore($userCity)
 
   const [agreement, setAgreement] = useState(false)
@@ -30,8 +40,43 @@ const OrderPage = () => {
   const spinner = useStore(makePaymentFx.pending)
   const router = useRouter()
 
+  const [btnText, setBtnText] = useState('Сначала выберите товар')
+  const [whereToRedirect, setWhereToRedirect] = useState(
+    WHERE_TO_REDIRECT.TO_CATALOG
+  )
+
+  useEffect(() => {
+    const isShoppingCartEmpty = !shoppingCart.length
+    if (isShoppingCartEmpty) {
+      setBtnText('Сначала выберите товар')
+
+      setWhereToRedirect(WHERE_TO_REDIRECT.TO_CATALOG)
+    } else if (user !== false) {
+      setBtnText('Подтвердить заказ')
+      setWhereToRedirect(WHERE_TO_REDIRECT.TO_PAYMENT)
+    } else {
+      setBtnText('Войти и Подтвердить заказ')
+      setWhereToRedirect(WHERE_TO_REDIRECT.TO_AUTH)
+    }
+  })
+
+  const isContinueBtnDisable = () => {
+    const isShoppingCartEmpty = !shoppingCart.length
+    const flag =
+      isShoppingCartEmpty ||
+      (user === false ? false : !(orderIsReady && agreement))
+    return flag
+  }
+
   const handleAgreementChange = () => setAgreement(!agreement)
-  const makePay = async () => {
+  const makePayOrRedirect = async () => {
+    if (whereToRedirect === WHERE_TO_REDIRECT.TO_AUTH) {
+      router.push(`/auth?redirect="${router.asPath}"`)
+      return
+    } else if (whereToRedirect === WHERE_TO_REDIRECT.TO_CATALOG) {
+      router.push(`/catalog`)
+      return
+    }
     try {
       const data = await makePaymentFx({
         url: '/payment',
@@ -56,29 +101,34 @@ const OrderPage = () => {
       checkPayment(paymentId)
     }
   }, [])
+
   const checkPayment = async (paymentId: string) => {
-    try {
-      const data = await checkPaymentFx({
-        url: '/payment/info',
-        paymentId,
-      })
+    if (user !== false) {
+      try {
+        const data = await checkPaymentFx({
+          url: '/payment/info',
+          paymentId,
+        })
 
-      if (data.status === 'succeeded') {
+        if (data.status === 'succeeded') {
+          resetCart()
+          return
+        }
+
+        sessionStorage.removeItem('paymentId')
+      } catch (error) {
+        console.log((error as Error).message)
         resetCart()
-        return
       }
-
-      sessionStorage.removeItem('paymentId')
-    } catch (error) {
-      console.log((error as Error).message)
-      resetCart()
     }
   }
 
   const resetCart = async () => {
-    sessionStorage.removeItem('paymentId')
-    await removeFromCartFx(`/shopping-cart/all/${user.userId}`)
-    setShoppingCart([])
+    if (user !== false) {
+      sessionStorage.removeItem('paymentId')
+      await removeFromCartFx(`/shopping-cart/all/${user.userId}`)
+      setShoppingCart([])
+    }
   }
 
   return (
@@ -92,6 +142,7 @@ const OrderPage = () => {
             <OrderAccordion
               setOrderIsReady={setOrderIsReady}
               showDoneIcon={orderIsReady}
+              isContinueBtnDisable={isContinueBtnDisable()}
             />
           </div>
           <div className={styles.order__pay}>
@@ -99,46 +150,25 @@ const OrderPage = () => {
               Итого
             </h3>
             <div className={cn(styles.order__pay__inner, darkModeClass)}>
-              <div className={styles.order__pay__goods}>
-                <span>
-                  Товары (
-                  {shoppingCart.reduce(
-                    (defaultCount, item) => defaultCount + item.count,
-                    0
-                  )}
-                  )
-                </span>
-                <span>{formatPrice(totalPrice)} P</span>
-              </div>
-              <div className={styles.order__pay__total}>
-                <span>На сумму</span>
-                <span className={darkModeClass}>
-                  {formatPrice(totalPrice)} P
-                </span>
-              </div>
+              <Products shoppingCart={shoppingCart} totalPrice={totalPrice} />
+
               <button
-                disabled={!(orderIsReady && agreement)}
+                disabled={false}
                 className={styles.order__pay__btn}
-                onClick={makePay}
+                onClick={makePayOrRedirect}
               >
                 {spinner ? (
                   <Spinner style={{ top: '6px', left: '47%' }} />
                 ) : (
-                  'Подтвердить заказ'
+                  btnText
                 )}
               </button>
-              <label className={cn(styles.order__pay__rights, darkModeClass)}>
-                <input
-                  className={styles.order__pay__rights__input}
-                  type="checkbox"
-                  onChange={handleAgreementChange}
-                  checked={agreement}
+              {user !== false && (
+                <Agreement
+                  agreement={agreement}
+                  handleAgreementChange={handleAgreementChange}
                 />
-                <span className={styles.order__pay__rights__text}>
-                  <strong>Согласен с условиями</strong> Правил пользования
-                  торговой площадкой и правилами возврата
-                </span>
-              </label>
+              )}
             </div>
           </div>
         </div>

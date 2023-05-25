@@ -43,14 +43,15 @@ export const checkUserAuthFx = createEffect(
 
             return data
         } catch (error) {
-            const AxiosError = error as AxiosError
-            if (AxiosError.response) {
-                if (AxiosError.response.status === HTTPStatus.FORBIDDEN) {
-                    return false
-                }
-            }
+            return false
+            // const AxiosError = error as AxiosError
+            // if (AxiosError.response) {
+            //     if (AxiosError.response.status === HTTPStatus.FORBIDDEN) {
+            //         return false
+            //     }
+            // }
 
-            toast.error((error as Error).message)
+            // toast.error((error as Error).message)
         }
     }
 )

@@ -82,40 +82,17 @@ const CatalogPage = ({ query }: { query: IQueryParams }) => {
       console.log('queryFull', queryFull)
       let newQuery = 'limit=20&offset=0'
       let newQueryObj = router.query as any
+      let newQueryObjForRouter = router.query as any
       if (queryFull) {
         newQuery = queryFull.query
         newQueryObj = queryFull.queryObj as any
-        // data = await getBoilerPartsFx(`/boiler-parts?${queryFull.query}`)
-        // router.push(
-        //   {
-        //     query: {
-        //       // ...router.query,
-        //       ...queryFull.queryObj,
-        //       offset: data.offset,
-        //     },
-        //   },
-        //   undefined,
-        //   { shallow: true }
-        // )
-        // setFilteredBoilerParts(data as any)
-      } else {
-        //   data = await getBoilerPartsFx('/boiler-parts?limit=20&offset=0')
-        //   router.push(
-        //     {
-        //       query: {
-        //         ...router.query,
-        //         offset: data.offset,
-        //       },
-        //     },
-        //     undefined,
-        //     { shallow: true }
-        //   )
-        // }
+        newQueryObjForRouter = queryFull.queryObjForRouter as any
       }
 
       data = await getBoilerPartsFx(`/boiler-parts?${newQuery}`)
       router.push(
-        { query: { ...newQueryObj, offset: data.offset } },
+        // { query: { ...newQueryObj, offset: data.offset } },
+        { query: { ...newQueryObjForRouter, offset: data.offset } },
         undefined,
         { shallow: true }
       )
@@ -127,9 +104,9 @@ const CatalogPage = ({ query }: { query: IQueryParams }) => {
     }
   }
 
-  useEffect(() => {
-    loadBoilerParts()
-  }, [isFilterInQuery])
+  // useEffect(() => {
+  //   loadBoilerParts()
+  // }, [isFilterInQuery])
 
   const resetPagination = (data: IBoilerParts, currentPage = 0) => {
     setCurrentPage(currentPage)
@@ -137,17 +114,52 @@ const CatalogPage = ({ query }: { query: IQueryParams }) => {
   }
 
   const getBoilerPartsByQuery = (selected = 0) => {
-    const { preQueryObj } = checkQueryParams(router)
-
+    const {
+      preQueryObj,
+      isValidBoilerQuery,
+      isValidPartsQuery,
+      isValidPriceQuery,
+    } = checkQueryParams(router)
     const queryFull = createQuery({
       priceRange: preQueryObj.priceRange,
-      boilerManufacturersStringArr: preQueryObj.boilers,
-      partsManufacturersStringArr: preQueryObj.parts,
+      boilerManufacturersTitlesArr: preQueryObj.boiler,
+      partsManufacturersTitlesArr: preQueryObj.parts,
       limit: 20,
       currentPage: selected,
       isPriceRangeChanged: true,
     })
+    if (isValidPriceQuery && preQueryObj.priceRange) {
+      setPriceRange(preQueryObj.priceRange)
+    }
 
+    if (
+      isValidBoilerQuery &&
+      preQueryObj.boiler &&
+      Array.isArray(preQueryObj.boiler)
+    ) {
+      setBoilerManufacturers(
+        boilerManufacturers.map((item) => {
+          const isChecked = !!preQueryObj.boiler?.includes(item.title)
+
+          return {
+            ...item,
+            checked: isChecked,
+          }
+        })
+      )
+    }
+    if (isValidPartsQuery && preQueryObj.parts) {
+      setPartsManufacturers(
+        partsManufacturers.map((item) => {
+          const isChecked = !!preQueryObj.parts?.includes(item.title)
+
+          return {
+            ...item,
+            checked: isChecked,
+          }
+        })
+      )
+    }
     loadBoilerParts(queryFull)
   }
   const handlePageChange = async ({ selected }: { selected: number }) => {

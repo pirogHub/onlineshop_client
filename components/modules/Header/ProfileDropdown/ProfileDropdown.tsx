@@ -13,20 +13,26 @@ import { useStore } from 'effector-react'
 import { $user } from '@/context/user'
 import { useRouter } from 'next/router'
 import { logoutFx } from '@/app/api/auth'
+import { useUser } from '@/hooks/useUser'
 
 const ProfileDropdown = forwardRef<HTMLDivElement, IWrappedComponentProps>(
   ({ open, setOpen }, ref) => {
     const darkModeClass = useTheme(styles)
 
-    const user = useStore($user)
+    // const user = useStore($user)
+    const user = useUser()
     const router = useRouter()
     const toggleProfileDropdown = () => {
       setOpen(!open)
     }
 
-    const handleLogout = async () => {
-      await logoutFx('/users/logout')
-      router.push('/')
+    const handleLogoutLogIn = async () => {
+      if (user !== false) {
+        await logoutFx('/users/logout')
+        router.push('/')
+      } else {
+        router.push(`/auth?redirect="${router.asPath}"`)
+      }
     }
 
     return (
@@ -54,24 +60,29 @@ const ProfileDropdown = forwardRef<HTMLDivElement, IWrappedComponentProps>(
               className={cn(styles.profile__dropdown, darkModeClass)}
               style={{ transformOrigin: 'right top' }}
             >
-              <li className={styles.profile__dropdown__user}>
-                <span
-                  className={cn(
-                    styles.profile__dropdown__username,
-                    darkModeClass
-                  )}
-                >
-                  {user.username}
-                </span>
-                <span
-                  className={cn(styles.profile__dropdown__email, darkModeClass)}
-                >
-                  {user.email}
-                </span>
-              </li>
+              {user !== false && (
+                <li className={styles.profile__dropdown__user}>
+                  <span
+                    className={cn(
+                      styles.profile__dropdown__username,
+                      darkModeClass
+                    )}
+                  >
+                    {user.username}
+                  </span>
+                  <span
+                    className={cn(
+                      styles.profile__dropdown__email,
+                      darkModeClass
+                    )}
+                  >
+                    {user.email}
+                  </span>
+                </li>
+              )}
               <li className={styles.profile__dropdown__item}>
                 <button
-                  onClick={handleLogout}
+                  onClick={handleLogoutLogIn}
                   className={styles.profile__dropdown__item__btn}
                 >
                   <span
@@ -80,7 +91,7 @@ const ProfileDropdown = forwardRef<HTMLDivElement, IWrappedComponentProps>(
                       darkModeClass
                     )}
                   >
-                    Выйти
+                    {user !== false ? 'Выйти' : 'Войти'}
                   </span>
                   <span
                     className={cn(
@@ -88,7 +99,9 @@ const ProfileDropdown = forwardRef<HTMLDivElement, IWrappedComponentProps>(
                       darkModeClass
                     )}
                   >
-                    <MaterialIcon name="MdLogout" />
+                    <MaterialIcon
+                      name={user !== false ? 'MdLogout' : 'MdLogin'}
+                    />
                   </span>
                 </button>
               </li>

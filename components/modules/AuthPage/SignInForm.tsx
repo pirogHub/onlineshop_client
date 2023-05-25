@@ -10,12 +10,11 @@ import styles from '@/components/templates/AuthPage/AuthPage.module.scss'
 import { IInputs } from '@/types/auth'
 import { showAuthError } from '@/utils/errors'
 import { useState } from 'react'
-import { $mode } from '@/context/mode'
-import { useStore } from 'effector-react'
+
 import { useRouter } from 'next/router'
 import NameInput from '@/components/elements/AuthPage/NameInput'
 import { useTheme } from '@/hooks/useTheme'
-const SignInForm = () => {
+const SignInForm = ({ linkToRedirect }: { linkToRedirect?: string }) => {
   const [spinner, setSpinner] = useState(false)
 
   const darkModeClass = useTheme(styles)
@@ -27,6 +26,11 @@ const SignInForm = () => {
     resetField,
   } = useForm<IInputs>()
 
+  const redirector = () => {
+    if (linkToRedirect) route.push(`${linkToRedirect}`)
+    else route.push('/dashboard')
+  }
+
   const onSubmit = async (data: IInputs) => {
     try {
       setSpinner(true)
@@ -37,7 +41,8 @@ const SignInForm = () => {
       })
       resetField('name')
       resetField('password')
-      route.push('/dashboard')
+
+      redirector()
     } catch (error) {
       showAuthError(error)
     } finally {

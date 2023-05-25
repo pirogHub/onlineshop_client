@@ -5,13 +5,22 @@ export interface ICreateQuery {
     isPriceRangeChanged: boolean
     boilerManufacturers?: IFilterCheckboxItem[]
     partsManufacturers?: IFilterCheckboxItem[]
-    boilerManufacturersStringArr?: string[]
-    partsManufacturersStringArr?: string[]
+    boilerManufacturersTitlesArr?: string[]
+    partsManufacturersTitlesArr?: string[]
     currentPage: number
     limit: number
 }
 
 export interface IQueryObj {
+    boiler?: string[],
+    parts?: string[],
+    priceFrom?: number,
+    priceTo?: number,
+    offset?: number,
+    limit: number
+}
+
+export interface IQueryObjForRouter {
     boiler?: string,
     parts?: string,
     priceFrom?: number,
@@ -23,4 +32,5 @@ export interface IQueryObj {
 export interface IQueryFull {
     query: string
     queryObj: IQueryObj
+    queryObjForRouter: IQueryObjForRouter
 }

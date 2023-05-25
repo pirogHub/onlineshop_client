@@ -23,22 +23,25 @@ import { getCartItemsFx } from '@/app/api/shopping-cart'
 import { toast } from 'react-toastify'
 import { $user } from '@/context/user'
 import { formatPrice } from '@/utils/common'
+import { useLoadShoppingCart } from '@/hooks/useLoadShoppingCart'
+import { useUser } from '@/hooks/useUser'
 
 const CartPopup = forwardRef<HTMLDivElement, IWrappedComponentProps>(
   ({ open, setOpen }, ref) => {
     const darkModeClass = useTheme(styles)
     const shoppingCart = useStore($shoppingCart)
-    const user = useStore($user)
+    const user = useUser()
     const disableCart = useStore($disableCart)
     const totalPrice = useStore($totalPrice)
+    useLoadShoppingCart()
 
     const toggleCartPopup = () => {
       setOpen(!open)
     }
 
-    useEffect(() => {
-      loadCartItems()
-    }, [])
+    // useEffect(() => {
+    //   if (user) loadCartItems()
+    // }, [])
     useEffect(() => {
       setTotalPrice(
         shoppingCart.reduce(
@@ -48,15 +51,15 @@ const CartPopup = forwardRef<HTMLDivElement, IWrappedComponentProps>(
       )
     }, [shoppingCart])
 
-    const loadCartItems = async () => {
-      try {
-        const cartItems = await getCartItemsFx(`/shopping-cart/${user.userId}`)
+    // const loadCartItems = async () => {
+    //   try {
+    //     const cartItems = await getCartItemsFx(`/shopping-cart/${user.userId}`)
 
-        setShoppingCart(cartItems)
-      } catch (error) {
-        toast.error((error as Error).message)
-      }
-    }
+    //     setShoppingCart(cartItems)
+    //   } catch (error) {
+    //     toast.error((error as Error).message)
+    //   }
+    // }
 
     return (
       <div className={styles.cart} ref={ref}>
@@ -145,15 +148,23 @@ const CartPopup = forwardRef<HTMLDivElement, IWrappedComponentProps>(
                     {formatPrice(totalPrice)} P
                   </span>
                 </div>
-                <Link href="/order">
+                <Link
+                  className={cn(styles.cart__popup__footer__btn__wrapper, {
+                    [styles.cart__popup__footer__btn__wrapper__disabled]:
+                      !shoppingCart.length,
+                  })}
+                  href={user === false ? '/auth?redirect="/order"' : '/order'}
+                >
                   <button
                     className={cn(
                       styles.cart__popup__footer__btn,
                       darkModeClass
                     )}
-                    disabled={!shoppingCart.length}
+                    disabled={user === false ? false : !shoppingCart.length}
                   >
-                    Оформить заказ
+                    {user === false
+                      ? 'Войти и Оформить заказ'
+                      : 'Оформить заказ'}
                   </button>
                 </Link>
               </div>

@@ -1,6 +1,7 @@
 export interface IOrderAccordionProps {
     setOrderIsReady: (arg0: boolean) => void
-    showDoneIcon: boolean
+    showDoneIcon: boolean,
+    isContinueBtnDisable: boolean
 }
 
 export interface IMakePayFx {

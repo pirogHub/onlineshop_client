@@ -426,6 +426,12 @@
                 background-color: #F0F0F0;
                 pointer-events: none;
             }
+
+            &:hover {
+                background-color: #edb229;
+                transition: color .2s ease-in-out;
+            }
+
         }
 
         &__rights {

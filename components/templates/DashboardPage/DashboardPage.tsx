@@ -84,13 +84,13 @@ const DashboardPage: FC<PropsWithChildren> = () => {
           Детали для газовых котлов
         </h3>
         <div className={styles.dashboard__parts}>
-          <h3 className={cn(styles.dashboard__title, darkModeClass)}>
+          <h3 className={cn(styles.dashboard__subtitle, darkModeClass)}>
             Хиты продаж
           </h3>
           <DashboardSlider items={bestsellers.rows || []} spinner={spinner} />
         </div>
         <div className={styles.dashboard__parts}>
-          <h3 className={cn(styles.dashboard__title, darkModeClass)}>
+          <h3 className={cn(styles.dashboard__subtitle, darkModeClass)}>
             Новинки
           </h3>
           <DashboardSlider items={newParts.rows || []} spinner={spinner} />

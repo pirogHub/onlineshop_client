@@ -296,6 +296,10 @@
                 padding-right: 14px;
             }
 
+            &__btn__wrapper__disabled {
+                cursor: default;
+            }
+
             &__btn {
                 width: 100%;
                 cursor: pointer;
@@ -309,8 +313,9 @@
 
                 &:disabled {
                     color: #7B7B7B;
-                    background-color: #F0F0F0;
+                    background-color: #d1daed;
                     pointer-events: none;
+                    cursor: default;
                 }
 
                 &:hover {

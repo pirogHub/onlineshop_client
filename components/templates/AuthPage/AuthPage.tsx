@@ -7,7 +7,7 @@ import ModeToggler from '@/components/elements/ModeToggler/ModeToggler'
 import cn from 'classnames'
 import { useTheme } from '@/hooks/useTheme'
 
-const AuthPage = () => {
+const AuthPage = ({ linkToRedirect }: { linkToRedirect?: string }) => {
   const isMedia800 = useMediaQuery(800)
   const switchCtn = useRef() as MutableRefObject<HTMLDivElement>
   const switchC1 = useRef() as MutableRefObject<HTMLDivElement>
@@ -21,7 +21,9 @@ const AuthPage = () => {
   const switchForm = () => {
     switchCtn.current.classList.add(styles.is_gx)
 
-    setTimeout(() => switchCtn.current.classList.remove(styles.is_gx), 1500)
+    setTimeout(() => {
+      if (switchCtn.current) switchCtn.current.classList.remove(styles.is_gx)
+    }, 500)
 
     switchCtn.current.classList.toggle(styles.is_txr)
     switchCircle1.current.classList.toggle(styles.is_txr)
@@ -47,7 +49,7 @@ const AuthPage = () => {
         ref={aContainer}
       >
         <div className={styles.container__inner}>
-          <SignUpForm />
+          <SignUpForm linkToRedirect={linkToRedirect} />
         </div>
       </div>
       <div
@@ -56,7 +58,7 @@ const AuthPage = () => {
         ref={bContainer}
       >
         <div className={styles.container__inner}>
-          <SignInForm />
+          <SignInForm linkToRedirect={linkToRedirect} />
         </div>
       </div>
       <div
