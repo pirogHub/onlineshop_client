@@ -2,7 +2,7 @@ import { $mode } from '@/context/mode'
 import { useStore } from 'effector-react'
 import { useEffect } from 'react'
 
-import styles from './modeToggler.module.scss'
+import styles from './ModeToggler.module.scss'
 import { useToggleTheme } from '@/hooks/useToggleTheme'
 
 const ModeToggler = () => {

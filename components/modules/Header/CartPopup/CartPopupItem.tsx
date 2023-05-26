@@ -1,6 +1,6 @@
 import { $mode } from '@/context/mode'
 import { IShoppingCartItem } from '../../../../types/shopping-cart'
-import styles from './cartPopup.module.scss'
+import styles from './CartPopup.module.scss'
 import cn from 'classnames'
 import { useStore } from 'effector-react'
 import Link from 'next/link'
