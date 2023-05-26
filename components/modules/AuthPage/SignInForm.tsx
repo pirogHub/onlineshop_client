@@ -40,7 +40,7 @@ const SignInForm = ({ linkToRedirect }: { linkToRedirect?: string }) => {
         username: data.name,
         password: data.password,
       })
-      debugger
+
       if (!userData) return
       setUser(userData)
       resetField('name')

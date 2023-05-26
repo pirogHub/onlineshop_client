@@ -11,9 +11,9 @@ import { setUser } from '@/context/user';
 export const signInFx = createEffect(
     async ({ url, username, password }: ISingInFx) => {
         const response = await api.post(url, { username, password })
-        // debugger
+
         const { data } = response
-        debugger
+
         if (data.warningMessage) {
             // throw new Error(data.warningMessage)
             toast.warning(data.warningMessage)
@@ -27,10 +27,10 @@ export const signInFx = createEffect(
 export const signUpFx = createEffect(
     async ({ url, username, password, email }: ISingUpFx) => {
         const { data } = await api.post(url, { username, password, email })
-        // debugger
+
         if (data.warningMessage) {
             // throw new Error(data.warningMessage)
-            // debugger
+
             toast.warning(data.warningMessage)
             return
         }

@@ -2,21 +2,24 @@ import { useStore } from 'effector-react'
 import { useEffect, useState } from 'react'
 import { removeFromCartFx } from '@/app/api/shopping-cart'
 import { removeItemFromCart, updateTotalPrice } from '@/utils/shopping-cart'
+import { $isPaymentConfirmWaiting } from '@/context/shopping-cart'
 
 export const usePrice = (
     count: number,
+    id: number,
     partId: number,
     initialPrice: number
 ) => {
     const spinner = useStore(removeFromCartFx.pending)
     const [price, setPrice] = useState(initialPrice)
 
+    const isPaymentConfurmWaiting = useStore($isPaymentConfirmWaiting)
     useEffect(() => {
         setPrice(price * count)
     }, [])
 
     useEffect(() => {
-        updateTotalPrice(price, partId)
+        updateTotalPrice(price, id, partId, isPaymentConfurmWaiting)
     }, [price])
 
     const increasePrice = () => setPrice(price + initialPrice)

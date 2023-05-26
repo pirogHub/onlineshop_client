@@ -25,6 +25,7 @@ import { $user } from '@/context/user'
 import { formatPrice } from '@/utils/common'
 import { useLoadShoppingCart } from '@/hooks/useLoadShoppingCart'
 import { useUser } from '@/hooks/useUser'
+import CartPopupItem from './CartPopupItem'
 
 const CartPopup = forwardRef<HTMLDivElement, IWrappedComponentProps>(
   ({ open, setOpen }, ref) => {
@@ -52,15 +53,18 @@ const CartPopup = forwardRef<HTMLDivElement, IWrappedComponentProps>(
     }, [shoppingCart])
 
     // const loadCartItems = async () => {
-    //   try {
-    //     const cartItems = await getCartItemsFx(`/shopping-cart/${user.userId}`)
+    //   if (user !== false) {
+    //     try {
+    //       const cartItems = await getCartItemsFx(
+    //         `/shopping-cart/${user.userId}`
+    //       )
 
-    //     setShoppingCart(cartItems)
-    //   } catch (error) {
-    //     toast.error((error as Error).message)
+    //       setShoppingCart(cartItems)
+    //     } catch (error) {
+    //       toast.error((error as Error).message)
+    //     }
     //   }
     // }
-
     return (
       <div className={styles.cart} ref={ref}>
         {disableCart ? (
@@ -110,7 +114,13 @@ const CartPopup = forwardRef<HTMLDivElement, IWrappedComponentProps>(
               </h3>
               <ul className={cn(styles.cart__popup__list, darkModeClass)}>
                 {shoppingCart.length ? (
-                  shoppingCart.map((item) => <li key={item.id}></li>)
+                  shoppingCart.map((item) => (
+                    <CartPopupItem
+                      shoppingCart={shoppingCart}
+                      item={item}
+                      key={item.id}
+                    />
+                  ))
                 ) : (
                   <li className={cn(styles.cart__popup__empty, darkModeClass)}>
                     <span

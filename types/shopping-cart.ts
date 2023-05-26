@@ -10,6 +10,7 @@ export interface IShoppingCartItem {
     total_price: number
     userId: number
     partId: number
+
 }
 
 export interface IAddToCartFx {
@@ -29,6 +30,7 @@ export interface IUpdateCartItemFx {
 
 export interface ICartItemCounterProps {
     totalCount: number
+    id: number
     partId: number
     initialCount: number
     increasePrice: VoidFunction

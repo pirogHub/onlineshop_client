@@ -19,6 +19,7 @@ const OrderAccordion = ({
   setOrderIsReady,
   showDoneIcon,
   isContinueBtnDisable,
+  isEditBtnDisabled,
 }: IOrderAccordionProps) => {
   const shoppingCart = useStore($shoppingCart)
   const totalPrice = useStore($totalPrice)
@@ -52,6 +53,7 @@ const OrderAccordion = ({
         <button
           className={styles.order__cart__title__btn}
           onClick={openAccordion}
+          disabled={isEditBtnDisabled}
         >
           <span>
             <SVG.EditSvg />

@@ -3,13 +3,15 @@ import styles from './OrderPage.module.scss'
 import cn from 'classnames'
 import { useStore } from 'effector-react'
 import {
+  $isPaymentConfirmWaiting,
   $shoppingCart,
   $totalPrice,
+  setIsPaymentConfirmWaiting,
   setShoppingCart,
 } from '@/context/shopping-cart'
 // import { formatPrice } from '@/utils/common'
 import Spinner from '@/components/elements/Spinner/Spinner'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import OrderAccordion from '@/components/modules/OrderPage/OrderAccordion'
 import { checkPaymentFx, makePaymentFx } from '@/app/api/payment'
 import { useRouter } from 'next/router'
@@ -19,6 +21,7 @@ import { $user, $userCity } from '@/context/user'
 import Products from './Products'
 import Agreement from './Agreement'
 import { useUser } from '@/hooks/useUser'
+import { useLoadShoppingCart } from '@/hooks/useLoadShoppingCart'
 
 enum WHERE_TO_REDIRECT {
   TO_CATALOG,
@@ -39,7 +42,9 @@ const OrderPage = () => {
   const [orderIsReady, setOrderIsReady] = useState(false)
   const spinner = useStore(makePaymentFx.pending)
   const router = useRouter()
-
+  const isWaitingPaymentIdConfirm = useStore($isPaymentConfirmWaiting)
+  const isWaitingPaymentIdConfirm_ref = useRef(false)
+  useLoadShoppingCart(isWaitingPaymentIdConfirm_ref.current)
   const [btnText, setBtnText] = useState('Сначала выберите товар')
   const [whereToRedirect, setWhereToRedirect] = useState(
     WHERE_TO_REDIRECT.TO_CATALOG
@@ -62,9 +67,13 @@ const OrderPage = () => {
 
   const isContinueBtnDisable = () => {
     const isShoppingCartEmpty = !shoppingCart.length
-    const flag =
-      isShoppingCartEmpty ||
-      (user === false ? false : !(orderIsReady && agreement))
+    const flag = isShoppingCartEmpty
+    return flag
+  }
+  const isPaymentBtnDisable = () => {
+    const isShoppingCartEmpty = !shoppingCart.length
+    const flag = !isShoppingCartEmpty && (user === false ? false : !agreement)
+
     return flag
   }
 
@@ -87,18 +96,28 @@ const OrderPage = () => {
             : ''
         }`,
       })
-
+      isWaitingPaymentIdConfirm_ref.current = true
+      setIsPaymentConfirmWaiting(true)
+      debugger
       sessionStorage.setItem('paymentId', data.id)
       router.push(data.confirmation.confirmation_url)
     } catch (error) {
       toast.error((error as Error).message)
+      setIsPaymentConfirmWaiting(false)
+      isWaitingPaymentIdConfirm_ref.current = false
     }
   }
   useEffect(() => {
     const paymentId = sessionStorage.getItem('paymentId')
-
-    if (paymentId) {
-      checkPayment(paymentId)
+    debugger
+    const flag =
+      !isWaitingPaymentIdConfirm_ref.current || !isWaitingPaymentIdConfirm
+    if (flag) {
+      if (paymentId) {
+        checkPayment(paymentId)
+      } else {
+        setIsPaymentConfirmWaiting(false)
+      }
     }
   }, [])
 
@@ -111,6 +130,7 @@ const OrderPage = () => {
         })
 
         if (data.status === 'succeeded') {
+          toast.success('Заказ оплачен!')
           resetCart()
           return
         }
@@ -118,6 +138,9 @@ const OrderPage = () => {
         sessionStorage.removeItem('paymentId')
       } catch (error) {
         resetCart()
+      } finally {
+        isWaitingPaymentIdConfirm_ref.current = false
+        setIsPaymentConfirmWaiting(false)
       }
     }
   }
@@ -125,7 +148,7 @@ const OrderPage = () => {
   const resetCart = async () => {
     if (user !== false) {
       sessionStorage.removeItem('paymentId')
-      await removeFromCartFx(`/shopping-cart/all/${user.userId}`)
+      await removeFromCartFx(`/shopping-cart/delete-all/${user.userId}`)
       setShoppingCart([])
     }
   }
@@ -142,6 +165,7 @@ const OrderPage = () => {
               setOrderIsReady={setOrderIsReady}
               showDoneIcon={orderIsReady}
               isContinueBtnDisable={isContinueBtnDisable()}
+              isEditBtnDisabled={!shoppingCart.length}
             />
           </div>
           <div className={styles.order__pay}>
@@ -152,7 +176,7 @@ const OrderPage = () => {
               <Products shoppingCart={shoppingCart} totalPrice={totalPrice} />
 
               <button
-                disabled={false}
+                disabled={isPaymentBtnDisable()}
                 className={styles.order__pay__btn}
                 onClick={makePayOrRedirect}
               >
@@ -162,7 +186,7 @@ const OrderPage = () => {
                   btnText
                 )}
               </button>
-              {user !== false && (
+              {user !== false && shoppingCart.length && (
                 <Agreement
                   agreement={agreement}
                   handleAgreementChange={handleAgreementChange}

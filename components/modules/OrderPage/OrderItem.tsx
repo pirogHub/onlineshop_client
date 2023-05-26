@@ -15,7 +15,7 @@ const OrderItem = ({ item }: { item: IShoppingCartItem }) => {
   const darkModeClass = useTheme(styles)
 
   const { price, spinner, decreasePrice, deleteCartItem, increasePrice } =
-    usePrice(item.count, item.partId, item.price)
+    usePrice(item.count, item.id, item.partId, item.price)
 
   return (
     <li className={styles.order__cart__list__item}>
@@ -46,6 +46,7 @@ const OrderItem = ({ item }: { item: IShoppingCartItem }) => {
               initialCount={item.count}
               increasePrice={increasePrice}
               decreasePrice={decreasePrice}
+              id={item.id}
             />
           ))}
       </div>
@@ -62,6 +63,7 @@ const OrderItem = ({ item }: { item: IShoppingCartItem }) => {
               initialCount={item.count}
               increasePrice={increasePrice}
               decreasePrice={decreasePrice}
+              id={item.id}
             />
           ))}
         <span

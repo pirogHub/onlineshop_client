@@ -1,4 +1,5 @@
 import { checkUserAuthFx, logoutFx } from '@/app/api/auth';
+import { setShoppingCart } from '@/context/shopping-cart';
 import { $user, $userExipiresIn, setUser, setUserExpiresIn } from '@/context/user';
 import { IUser } from '@/types/auth';
 import { useStore } from 'effector-react';
@@ -34,7 +35,7 @@ export const useUser = () => {
 
             prevExpInref.current = newExpiresIn
             setUserExpiresIn(newExpiresIn)
-            const { data } = await checkUserAuthFx("/users/login-check")
+            const data = await checkUserAuthFx("/users/login-check")
 
             if (isUserNotEmpty(data)) {
 
@@ -42,6 +43,7 @@ export const useUser = () => {
                 setTmpUser(data)
             } else {
                 setTmpUser(false)
+                setShoppingCart([])
             }
 
         } else {
@@ -51,7 +53,9 @@ export const useUser = () => {
 
 
     useEffect(() => {
-        if (isUserNotEmpty(userData)) {
+        const flag = isUserNotEmpty(userData)
+
+        if (flag) {
             setTmpUser(userData)
         } else {
             setTmpUser(false)

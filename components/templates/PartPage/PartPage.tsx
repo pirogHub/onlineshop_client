@@ -25,6 +25,7 @@ import { toast } from 'react-toastify'
 import ImagesAccordion from '@/components/modules/PartImageList/ImagesAccordion'
 import { useRouter } from 'next/router'
 import { useUser } from '@/hooks/useUser'
+import { useLogoutIfForbidden } from '@/hooks/useLogoutIfForbidden'
 const PartPage = () => {
   const darkModeClass = useTheme(styles)
   const boilerPart = useStore($boilerPart)
@@ -34,12 +35,14 @@ const PartPage = () => {
   const isInCart = cartItems.some((item) => item.partId === boilerPart.id)
   const spinnerToggleCart = useStore(removeFromCartFx.pending)
   const spinnerSlider = useStore(getBoilerPartsFx.pending)
-  // const user = useStore($user)
+  const user1 = useStore($user)
   const router = useRouter()
   const { user } = useUser()
-
+  const { checkError } = useLogoutIfForbidden()
   const toggleToCart = () => {
-    if (user !== false) toggleCartItem(user.username, boilerPart.id, isInCart)
+    const usertmp = user1
+    if (user !== false)
+      toggleCartItem(user.username, boilerPart.id, isInCart, checkError)
     else {
       router.push(`/auth?redirect="${router.asPath}"`)
       toast.warning('Войдите в систему, чтобы добавлять товары в корзину')

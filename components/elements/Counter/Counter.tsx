@@ -7,7 +7,7 @@ import Spinner from '../Spinner/Spinner'
 import { updateCartItemFx } from '@/app/api/shopping-cart'
 import { updateCartItemCount } from '@/context/shopping-cart'
 import { toast } from 'react-toastify'
-
+import cn from 'classnames'
 enum COUNT_OPERATIONS {
   INCREASE,
   DECREASE,
@@ -15,6 +15,7 @@ enum COUNT_OPERATIONS {
 
 const Counter = ({
   totalCount,
+  id,
   partId,
   increasePrice,
   decreasePrice,
@@ -37,7 +38,7 @@ const Counter = ({
       setCount(newCount)
 
       const data = await updateCartItemFx({
-        url: `/shopping-cart/count/${partId}`,
+        url: `/shopping-cart/update-count/${id}`,
         payload: { count: newCount },
       })
 
@@ -50,11 +51,11 @@ const Counter = ({
   }
 
   return (
-    <div>
+    <div className={cn(styles.cart__popup__list__item__counter, darkModeClass)}>
       <button
         disabled={count <= 0}
         onClick={
-          count <= 0 ? undefined : () => changeCount(COUNT_OPERATIONS.INCREASE)
+          count <= 0 ? undefined : () => changeCount(COUNT_OPERATIONS.DECREASE)
         }
       >
         <SVG.MinusSvg />
@@ -71,7 +72,7 @@ const Counter = ({
         onClick={
           count >= totalCount
             ? undefined
-            : () => changeCount(COUNT_OPERATIONS.DECREASE)
+            : () => changeCount(COUNT_OPERATIONS.INCREASE)
         }
       >
         <SVG.PlusSvg />

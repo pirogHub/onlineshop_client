@@ -3,11 +3,13 @@ import { createDomain } from 'effector-next'
 
 const shoppingCart = createDomain()
 
+
 export const setShoppingCart = shoppingCart.createEvent<IShoppingCartItem[]>()
 export const updateShoppingCart = shoppingCart.createEvent<IShoppingCartItem>()
 export const removeShoppingCartItem = shoppingCart.createEvent<number>()
 export const setTotalPrice = shoppingCart.createEvent<number>()
 export const setDisableCart = shoppingCart.createEvent<boolean>()
+export const setIsPaymentConfirmWaiting = shoppingCart.createEvent<boolean>()
 export const updateCartItemTotalPrice = shoppingCart.createEvent<{
     partId: number
     total_price: number
@@ -59,3 +61,8 @@ export const $totalPrice = shoppingCart
 export const $disableCart = shoppingCart
     .createStore<boolean>(false)
     .on(setDisableCart, (_, value) => value)
+
+
+export const $isPaymentConfirmWaiting = shoppingCart
+    .createStore<boolean>(false)
+    .on(setIsPaymentConfirmWaiting, (_, value) => value)

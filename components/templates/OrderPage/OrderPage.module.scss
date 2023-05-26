@@ -88,6 +88,17 @@
                 cursor: pointer;
                 transition: color .2s ease-in-out;
 
+                &:disabled,
+                &:disabled:hover {
+                    cursor: default;
+                    color: #ccc;
+                }
+
+                &:disabled svg,
+                &:disabled:hover svg {
+                    stroke: #ccc;
+                }
+
                 span {
                     position: absolute;
                     left: -30px;
@@ -103,12 +114,12 @@
                     }
                 }
 
-                &:hover {
+                &:hover:not(:disabled) {
                     color: #E0595D;
                     transition: color .2s ease-in-out;
                 }
 
-                &:hover span svg {
+                &:hover:not(:disabled) span svg {
                     stroke: #E0595D;
                     transition: stroke .2s ease-in-out;
                 }
@@ -463,7 +474,7 @@
                 content: '';
                 -webkit-appearance: none;
                 background-color: transparent;
-                border: 2px solid #F0F0F0;
+                border: 2px solid #abaaaa;
                 border-radius: 4px;
                 width: 18px;
                 height: 18px;

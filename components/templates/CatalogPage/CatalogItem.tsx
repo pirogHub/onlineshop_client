@@ -20,6 +20,7 @@ import SVG from '@/components/elements/ui/svg'
 import { useUser } from '@/hooks/useUser'
 import { useRouter } from 'next/router'
 import { toast } from 'react-toastify'
+import { useLogoutIfForbidden } from '@/hooks/useLogoutIfForbidden'
 
 const CatalogItem = ({ item }: { item: IBoilerPart }) => {
   const [spinner, setSpinner] = useState(false)
@@ -27,14 +28,14 @@ const CatalogItem = ({ item }: { item: IBoilerPart }) => {
   // const user = useStore($user)
   const shoppingCart = useStore($shoppingCart)
   const isInCart = shoppingCart.some((cartItem) => cartItem.partId === item.id)
-
+  const { checkError } = useLogoutIfForbidden()
   const { user } = useUser()
   const router = useRouter()
 
   const toggleCart = (e: MouseEvent<HTMLButtonElement>) => {
     e.preventDefault()
     if (user !== false)
-      toggleCartItem(user.username, item.id, isInCart, setSpinner)
+      toggleCartItem(user.username, item.id, isInCart, checkError, setSpinner)
     else {
       router.push(`/auth?redirect="${router.asPath}"`)
       toast.warning('Войдите в систему, чтобы добавлять товары в корзину')

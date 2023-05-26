@@ -6,29 +6,30 @@ import { useStore } from 'effector-react';
 import { useEffect } from 'react';
 import { useUser } from './useUser';
 
-// const isUserNotEmpty = (user: any) => {
-//     if (!user.username ||
-//         !user.userId ||
-//         !user.email)
-//         return false
-//     else return true
-// }
 
-export const useLoadShoppingCart = () => {
+
+export const useLoadShoppingCart = (isWaitingPaymentIdConfirm?: boolean) => {
     const { user } = useUser()
     const loadCartItems = async () => {
-        // debugger
+
         if (user !== false) {
+            if (isWaitingPaymentIdConfirm) return
             try {
                 const cartItems = await getCartItemsFx(`/shopping-cart/${user.userId}`)
 
                 setShoppingCart(cartItems)
             } catch (error) {
+                debugger
                 toast.error((error as Error).message)
             }
+        } else {
+            setShoppingCart([])
         }
     }
     useEffect(() => {
         if (user !== false) loadCartItems()
+        else {
+            setShoppingCart([])
+        }
     }, [])
 }

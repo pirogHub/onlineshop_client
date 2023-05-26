@@ -12,22 +12,34 @@ import { useTheme } from '@/hooks/useTheme'
 import Spinner from '@/components/elements/Spinner/Spinner'
 import SVG from '@/components/elements/ui/svg'
 import Counter from '@/components/elements/Counter/Counter'
+import { $isPaymentConfirmWaiting } from '@/context/shopping-cart'
+import { useLogoutIfForbidden } from '@/hooks/useLogoutIfForbidden'
 
-const CartPopupItem = ({ item }: { item: IShoppingCartItem }) => {
+const CartPopupItem = ({
+  item,
+  shoppingCart,
+}: {
+  item: IShoppingCartItem
+  shoppingCart?: any
+}) => {
   const darkModeClass = useTheme(styles)
-
+  const isPaymentConfurmWaiting = useStore($isPaymentConfirmWaiting)
   const [spinner, setPinner] = useState(false)
   const [price, setPrice] = useState(item.price)
+  const { checkError } = useLogoutIfForbidden()
   useEffect(() => {
     setPrice(price * item.count)
   }, [])
   useEffect(() => {
-    updateTotalPrice(price, item.partId)
+    updateTotalPrice(price, item.id, item.partId, isPaymentConfurmWaiting)
   }, [price])
 
-  const increasePrice = () => setPrice(price + item.price)
+  const increasePrice = () => {
+    setPrice(price + item.price)
+  }
   const decreasePrice = () => setPrice(price - item.price)
-  const deleteCartItem = () => removeItemFromCart(item.partId, setPinner)
+  const deleteCartItem = () =>
+    removeItemFromCart(item.partId, checkError, setPinner)
 
   return (
     <li className={styles.cart__popup__list__item}>
@@ -40,8 +52,8 @@ const CartPopupItem = ({ item }: { item: IShoppingCartItem }) => {
           className={cn(styles.cart__popup__list__item__text, darkModeClass)}
         >
           <span>
-            {item.name.replace('.', '')}, {item.parts_manufacturer},{' '}
-            {item.boiler_manufacturer}
+            <strong>{item.name.replace('.', '')}</strong>;{' '}
+            {item.parts_manufacturer}, {item.boiler_manufacturer}
           </span>
         </Link>
         <button onClick={deleteCartItem}>
@@ -64,8 +76,9 @@ const CartPopupItem = ({ item }: { item: IShoppingCartItem }) => {
             decreasePrice={decreasePrice}
             increasePrice={increasePrice}
             initialCount={item.count}
-            partId={item.id}
+            id={item.id}
             totalCount={item.in_stock}
+            partId={item.partId}
           />
         )}
         <span
