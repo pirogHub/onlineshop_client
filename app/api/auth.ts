@@ -70,7 +70,6 @@ export const logoutFx = createEffect(
     async (url: string) => {
 
         try {
-            console.log("logoutFx");
 
             await api.get(url)
             setUser({} as IUser)

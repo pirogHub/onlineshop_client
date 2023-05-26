@@ -61,10 +61,15 @@ export const removeItemFromCart = async (
 export const updateTotalPrice = async (total_price: number, id: number, partId: number, isPaymentConfirmWaiting: boolean) => {
 
     if (isPaymentConfirmWaiting) return
-    const data = await updateCartItemFx({
-        url: `/shopping-cart/update-total-price/${id}`,
-        payload: { total_price },
-    })
+    try {
 
-    updateCartItemTotalPrice({ partId, total_price: data.total_price })
+        const data = await updateCartItemFx({
+            url: `/shopping-cart/update-total-price/${id}`,
+            payload: { total_price },
+        })
+
+        updateCartItemTotalPrice({ partId, total_price: data.total_price })
+    } catch (error) {
+
+    }
 }

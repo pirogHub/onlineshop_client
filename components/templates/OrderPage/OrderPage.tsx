@@ -98,7 +98,7 @@ const OrderPage = () => {
       })
       isWaitingPaymentIdConfirm_ref.current = true
       setIsPaymentConfirmWaiting(true)
-      debugger
+
       sessionStorage.setItem('paymentId', data.id)
       router.push(data.confirmation.confirmation_url)
     } catch (error) {
@@ -109,7 +109,7 @@ const OrderPage = () => {
   }
   useEffect(() => {
     const paymentId = sessionStorage.getItem('paymentId')
-    debugger
+
     const flag =
       !isWaitingPaymentIdConfirm_ref.current || !isWaitingPaymentIdConfirm
     if (flag) {
@@ -186,7 +186,7 @@ const OrderPage = () => {
                   btnText
                 )}
               </button>
-              {user !== false && shoppingCart.length && (
+              {user !== false && !!shoppingCart.length && (
                 <Agreement
                   agreement={agreement}
                   handleAgreementChange={handleAgreementChange}

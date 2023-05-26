@@ -19,7 +19,7 @@ export const useLoadShoppingCart = (isWaitingPaymentIdConfirm?: boolean) => {
 
                 setShoppingCart(cartItems)
             } catch (error) {
-                debugger
+
                 toast.error((error as Error).message)
             }
         } else {
