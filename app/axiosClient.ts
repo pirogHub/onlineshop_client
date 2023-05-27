@@ -26,8 +26,8 @@ api.interceptors.request.use((config) => {
 api.interceptors.response.use((config) => config, async error => {
     const originalRequest = error.config
 
-    if ((error.response.status === 403
-        || error.response.status === 401
+    if ((error?.response?.status === 403
+        || error?.response?.status === 401
         || errorCatch(error) === "jwt-expired"
         || errorCatch(error) === "jwt must be provided")
         && error.config && !error.config._isRetry) {

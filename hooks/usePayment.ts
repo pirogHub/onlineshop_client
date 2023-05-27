@@ -70,7 +70,7 @@ export const usePayment = () => {
                     paymentId,
                 })
                 debugger
-                if (data.status === 'succeeded') {
+                if (data?.status === 'succeeded') {
                     toast.success('Заказ оплачен!')
                     // resetCart()
                     return
