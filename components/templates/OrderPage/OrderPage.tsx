@@ -24,6 +24,7 @@ import { useUser } from '@/hooks/useUser'
 import { useLoadShoppingCart } from '@/hooks/useLoadShoppingCart'
 import { setTotalPrice } from '@/context/shopping-cart'
 import { error500hander } from '@/app/api.helpers'
+import { usePayment } from '@/hooks/usePayment'
 
 enum WHERE_TO_REDIRECT {
   TO_CATALOG,
@@ -37,16 +38,19 @@ const OrderPage = () => {
   const totalPrice = useStore($totalPrice)
   // const user = useStore($user)
   const { user } = useUser()
-  const userCity = useStore($userCity)
 
   const [agreement, setAgreement] = useState(false)
 
   const [orderIsReady, setOrderIsReady] = useState(false)
   const spinner = useStore(makePaymentFx.pending)
   const router = useRouter()
+
+  const { checkPayment, makePayment, resetCart } = usePayment()
+
   const isWaitingPaymentIdConfirm = useStore($isPaymentConfirmWaiting)
-  const isWaitingPaymentIdConfirm_ref = useRef(false)
-  useLoadShoppingCart(isWaitingPaymentIdConfirm_ref.current)
+  // const isWaitingPaymentIdConfirm_ref = useRef(false)
+
+  useLoadShoppingCart(isWaitingPaymentIdConfirm)
   const [btnText, setBtnText] = useState('Сначала выберите товар')
   const [whereToRedirect, setWhereToRedirect] = useState(
     WHERE_TO_REDIRECT.TO_CATALOG
@@ -67,6 +71,10 @@ const OrderPage = () => {
   useEffect(() => {
     loadShoppingCart()
   }, [])
+
+  useEffect(() => {
+    checkPayment()
+  }, [user])
 
   useEffect(() => {
     const isShoppingCartEmpty = !shoppingCart.length
@@ -104,73 +112,79 @@ const OrderPage = () => {
       router.push(`/catalog`)
       return
     }
-    try {
-      const data = await makePaymentFx({
-        url: '/payment',
-        amount: totalPrice,
-        description: `Заказ №1 ${
-          userCity.city.length
-            ? `Город: ${userCity.city}, улица: ${userCity.street}`
-            : ''
-        }`,
-      })
-      isWaitingPaymentIdConfirm_ref.current = true
-      setIsPaymentConfirmWaiting(true)
 
-      sessionStorage.setItem('paymentId', data.id)
-      router.push(data.confirmation.confirmation_url)
-    } catch (error) {
-      if (!error500hander(error)) toast.error((error as Error).message)
-      setIsPaymentConfirmWaiting(false)
-      isWaitingPaymentIdConfirm_ref.current = false
-    }
+    makePayment(totalPrice)
+    // try {
+    //   const data = await makePaymentFx({
+    //     url: '/payment',
+    //     amount: totalPrice,
+    //     description: `Заказ №1 ${
+    //       userCity.city.length
+    //         ? `Город: ${userCity.city}, улица: ${userCity.street}`
+    //         : ''
+    //     }`,
+    //   })
+    //   isWaitingPaymentIdConfirm_ref.current = true
+    //   setIsPaymentConfirmWaiting(true)
+
+    //   sessionStorage.setItem('paymentId', data.id)
+    //   router.push(data.confirmation.confirmation_url)
+    // } catch (error) {
+    //   if (!error500hander(error)) toast.error((error as Error).message)
+    //   setIsPaymentConfirmWaiting(false)
+    //   isWaitingPaymentIdConfirm_ref.current = false
+    // }
   }
-  useEffect(() => {
-    const paymentId = sessionStorage.getItem('paymentId')
+  // useEffect(() => {
+  //   const paymentId = sessionStorage.getItem('paymentId')
 
-    const flag =
-      !isWaitingPaymentIdConfirm_ref.current || !isWaitingPaymentIdConfirm
-    if (flag) {
-      if (paymentId) {
-        checkPayment(paymentId)
-      } else {
-        setIsPaymentConfirmWaiting(false)
-      }
-    }
-  }, [])
+  //   const flag =
+  //     !isWaitingPaymentIdConfirm_ref.current || !isWaitingPaymentIdConfirm
+  //   if (flag) {
+  //     if (paymentId) {
+  //       checkPayment(paymentId)
+  //     } else {
+  //       setIsPaymentConfirmWaiting(false)
+  //     }
+  //   }
+  // }, [])
 
-  const checkPayment = async (paymentId: string) => {
-    if (user !== false) {
-      try {
-        const data = await checkPaymentFx({
-          url: '/payment/info',
-          paymentId,
-        })
-        debugger
-        if (data.status === 'succeeded') {
-          toast.success('Заказ оплачен!')
-          // resetCart()
-          return
-        }
+  // const checkPayment = async (paymentId: string) => {
+  //   const flag = user === false
+  //   debugger
+  //   if (!flag) {
+  //     try {
+  //       const data = await checkPaymentFx({
+  //         url: '/payment/info',
+  //         paymentId,
+  //       })
+  //       debugger
+  //       if (data.status === 'succeeded') {
+  //         toast.success('Заказ оплачен!')
+  //         // resetCart()
+  //         return
+  //       }
 
-        sessionStorage.removeItem('paymentId')
-      } catch (error) {
-        error500hander(error)
-      } finally {
-        resetCart()
-        isWaitingPaymentIdConfirm_ref.current = false
-        setIsPaymentConfirmWaiting(false)
-      }
-    }
-  }
+  //       sessionStorage.removeItem('paymentId')
+  //     } catch (error) {
+  //       debugger
+  //       error500hander(error)
+  //     } finally {
+  //       debugger
+  //       resetCart()
+  //       isWaitingPaymentIdConfirm_ref.current = false
+  //       setIsPaymentConfirmWaiting(false)
+  //     }
+  //   }
+  // }
 
-  const resetCart = async () => {
-    if (user !== false) {
-      sessionStorage.removeItem('paymentId')
-      await removeFromCartFx(`/shopping-cart/delete-all`)
-      setShoppingCart([])
-    }
-  }
+  // const resetCart = async () => {
+  //   if (user !== false) {
+  //     sessionStorage.removeItem('paymentId')
+  //     await removeFromCartFx(`/shopping-cart/delete-all`)
+  //     setShoppingCart([])
+  //   }
+  // }
 
   return (
     <section className={styles.order}>
