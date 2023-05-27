@@ -12,6 +12,7 @@ import { toast } from 'react-toastify'
 import Custom404 from '../404'
 import Breadcrumbs from '@/components/modules/Breadcrumbs/Breadcrumbs'
 import { useUser } from '@/hooks/useUser'
+import { error500hander } from '@/app/api.helpers'
 
 export default function Part({ query }: { query: IQueryParams }) {
   // const { checkUser } = useUser()
@@ -52,7 +53,7 @@ export default function Part({ query }: { query: IQueryParams }) {
 
       setBoilerPart(data)
     } catch (error) {
-      toast.error((error as Error).message)
+      if (!error500hander(error)) toast.error((error as Error).message)
     }
   }
   return (

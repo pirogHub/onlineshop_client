@@ -15,13 +15,15 @@ import { useEffect, useRef, useState } from 'react'
 import OrderAccordion from '@/components/modules/OrderPage/OrderAccordion'
 import { checkPaymentFx, makePaymentFx } from '@/app/api/payment'
 import { useRouter } from 'next/router'
-import { removeFromCartFx } from '@/app/api/shopping-cart'
+import { getShoppingCartFx, removeFromCartFx } from '@/app/api/shopping-cart'
 import { toast } from 'react-toastify'
 import { $user, $userCity } from '@/context/user'
 import Products from './Products'
 import Agreement from './Agreement'
 import { useUser } from '@/hooks/useUser'
 import { useLoadShoppingCart } from '@/hooks/useLoadShoppingCart'
+import { setTotalPrice } from '@/context/shopping-cart'
+import { error500hander } from '@/app/api.helpers'
 
 enum WHERE_TO_REDIRECT {
   TO_CATALOG,
@@ -49,6 +51,22 @@ const OrderPage = () => {
   const [whereToRedirect, setWhereToRedirect] = useState(
     WHERE_TO_REDIRECT.TO_CATALOG
   )
+
+  const loadShoppingCart = async () => {
+    const shoppingCart = await getShoppingCartFx()
+    setShoppingCart(shoppingCart)
+  }
+  useEffect(() => {
+    setTotalPrice(
+      shoppingCart.reduce(
+        (defaultCount, item) => defaultCount + item.total_price,
+        0
+      )
+    )
+  }, [shoppingCart])
+  useEffect(() => {
+    loadShoppingCart()
+  }, [])
 
   useEffect(() => {
     const isShoppingCartEmpty = !shoppingCart.length
@@ -102,7 +120,7 @@ const OrderPage = () => {
       sessionStorage.setItem('paymentId', data.id)
       router.push(data.confirmation.confirmation_url)
     } catch (error) {
-      toast.error((error as Error).message)
+      if (!error500hander(error)) toast.error((error as Error).message)
       setIsPaymentConfirmWaiting(false)
       isWaitingPaymentIdConfirm_ref.current = false
     }
@@ -128,17 +146,18 @@ const OrderPage = () => {
           url: '/payment/info',
           paymentId,
         })
-
+        debugger
         if (data.status === 'succeeded') {
           toast.success('Заказ оплачен!')
-          resetCart()
+          // resetCart()
           return
         }
 
         sessionStorage.removeItem('paymentId')
       } catch (error) {
-        resetCart()
+        error500hander(error)
       } finally {
+        resetCart()
         isWaitingPaymentIdConfirm_ref.current = false
         setIsPaymentConfirmWaiting(false)
       }
@@ -148,7 +167,7 @@ const OrderPage = () => {
   const resetCart = async () => {
     if (user !== false) {
       sessionStorage.removeItem('paymentId')
-      await removeFromCartFx(`/shopping-cart/delete-all/${user.userId}`)
+      await removeFromCartFx(`/shopping-cart/delete-all`)
       setShoppingCart([])
     }
   }

@@ -130,14 +130,16 @@ const CatalogFiltersMobile = ({
             isMobileForFilters={isMobile}
           >
             <div
+              key={'priceRangeWrapper'}
               className={cn(styles.filters__manufacturer__inner, darkModeClass)}
             >
               <PriceRange
+                key={'priceRange'}
                 priceRange={priceRange}
                 setPriceRange={setPriceRange}
                 setIsPriceRangeChanged={setIsPriceRangeChanged}
               />
-              <div style={{ height: 24 }} />
+              <div key={'priceRangeBottomMargin'} style={{ height: 24 }} />
             </div>
           </Accordion>
         </div>

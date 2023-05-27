@@ -35,4 +35,5 @@ export interface ICartItemCounterProps {
     initialCount: number
     increasePrice: VoidFunction
     decreasePrice: VoidFunction
+    isWithStockCountMessage?: boolean
 }

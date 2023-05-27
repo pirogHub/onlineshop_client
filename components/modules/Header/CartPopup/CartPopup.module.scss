@@ -123,6 +123,17 @@
             &__item {
                 padding-bottom: 16px;
 
+                &__inStock_message {
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    color: #777;
+
+                    &.dark_mode {
+                        color: #ccc;
+                    }
+                }
+
                 &:not(:last-child) {
                     margin-bottom: 16px;
                     padding-bottom: 16px;
@@ -189,6 +200,11 @@
                     font-size: 14px;
                     color: #E0595D;
                     opacity: 0.5;
+                }
+
+                &__counter__wrapper {
+                    display: flex;
+                    gap: 10px;
                 }
 
                 &__counter {

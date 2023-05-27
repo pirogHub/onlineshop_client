@@ -31,6 +31,7 @@ import { IQueryFull } from '@/types/query'
 import { checkQueryParams, createQuery } from '@/utils/aboutQuery'
 import { usePopup } from '@/hooks/usePopups'
 import SVG from '@/components/elements/ui/svg'
+import { error500hander } from '@/app/api.helpers'
 
 const CatalogPage = ({ query }: { query: IQueryParams }) => {
   const router = useRouter()
@@ -97,7 +98,7 @@ const CatalogPage = ({ query }: { query: IQueryParams }) => {
       )
       resetPagination(data, data.offset)
     } catch (error) {
-      toast.error((error as Error).message)
+      if (!error500hander(error)) toast.error((error as Error).message)
     } finally {
       setTimeout(() => setSpinner(false), 500)
     }
@@ -184,7 +185,7 @@ const CatalogPage = ({ query }: { query: IQueryParams }) => {
       setPriceRange([1000, 9000])
       setIsPriceRangeChanged(false)
     } catch (error) {
-      toast.error((error as Error).message)
+      if (!error500hander(error)) toast.error((error as Error).message)
     }
   }
 

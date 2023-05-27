@@ -14,7 +14,7 @@ export interface IAuthPageInput {
 
 
 export interface ISingUpFx {
-    url: string
+    url?: string
     username: string
     email: string
     password: string
@@ -22,7 +22,7 @@ export interface ISingUpFx {
 }
 
 export interface ISingInFx {
-    url: string
+    url?: string
     username: string
     password: string
 
@@ -30,7 +30,18 @@ export interface ISingInFx {
 
 
 export interface IUser {
+    id?: number | string
     username: string
     userId: number | string
     email: string
+}
+
+
+export interface ITokens {
+    accessToken: string
+    refreshToken: string
+}
+
+export interface IAuthResponse extends ITokens {
+    user: IUser
 }

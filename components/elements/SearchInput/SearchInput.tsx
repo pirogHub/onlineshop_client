@@ -38,6 +38,7 @@ import {
   DoWhenClickOutside,
   IWrappedComponentPropsDo,
 } from '@/hocs/DoWhenClickOutside'
+import { error500hander } from '@/app/api.helpers'
 enum TOGGLE_OVERLAY {
   ON,
   OFF,
@@ -122,7 +123,7 @@ const SearchInput = forwardRef<HTMLDivElement, IWrappedComponentPropsDo>(
 
         setOptions(names)
       } catch (error) {
-        toast.error((error as Error).message)
+        if (!error500hander(error)) toast.error((error as Error).message)
       }
     }
 

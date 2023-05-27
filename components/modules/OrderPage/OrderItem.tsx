@@ -47,6 +47,7 @@ const OrderItem = ({ item }: { item: IShoppingCartItem }) => {
               increasePrice={increasePrice}
               decreasePrice={decreasePrice}
               id={item.id}
+              isWithStockCountMessage
             />
           ))}
       </div>
@@ -66,6 +67,7 @@ const OrderItem = ({ item }: { item: IShoppingCartItem }) => {
               id={item.id}
             />
           ))}
+
         <span
           className={cn(styles.order__cart__list__item__price, darkModeClass)}
         >

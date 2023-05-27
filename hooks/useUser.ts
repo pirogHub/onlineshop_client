@@ -6,7 +6,7 @@ import { useStore } from 'effector-react';
 import { useEffect, useRef, useState } from 'react';
 const isUserNotEmpty = (user: any) => {
     if (!user || !user.username ||
-        !user.userId ||
+        !user.id ||
         !user.email)
         return false
     else return true
@@ -26,6 +26,7 @@ export const useUser = () => {
 
         const date = Date.now()
         const diff = prevExpInref.current - date
+
         if (diff < 0 && prevExpInref.current === expiresIn) {
             // console.log("do");
             const newExpiresIn = Date.now() + 100 * 60 * 60
@@ -35,12 +36,12 @@ export const useUser = () => {
 
             prevExpInref.current = newExpiresIn
             setUserExpiresIn(newExpiresIn)
-            const data = await checkUserAuthFx("/users/login-check")
+            const data = await checkUserAuthFx()
 
-            if (isUserNotEmpty(data)) {
+            if (data && isUserNotEmpty(data.user)) {
 
-                setUser(data)
-                setTmpUser(data)
+                setUser(data.user)
+                setTmpUser(data.user)
             } else {
                 setTmpUser(false)
                 setShoppingCart([])

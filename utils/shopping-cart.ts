@@ -8,6 +8,7 @@ import {
 } from '@/context/shopping-cart'
 import { useStore } from 'effector-react'
 import { useLogoutIfForbidden } from '@/hooks/useLogoutIfForbidden'
+import { error500hander } from '@/app/api.helpers'
 
 export const toggleCartItem = async (
     username: string,
@@ -35,7 +36,10 @@ export const toggleCartItem = async (
         updateShoppingCart(data)
     } catch (error) {
         const is403 = checkError(error)
-        if (!is403) toast.error((error as Error).message)
+        if (!is403) {
+            if (!error500hander(error))
+                toast.error((error as Error).message)
+        }
     } finally {
         if (setSpinner) setSpinner(false)
     }
@@ -52,7 +56,10 @@ export const removeItemFromCart = async (
         removeShoppingCartItem(partId)
     } catch (error) {
         const is403 = checkError(error)
-        if (!is403) toast.error((error as Error).message)
+        if (!is403) {
+            if (!error500hander(error))
+                toast.error((error as Error).message)
+        }
     } finally {
         if (setSpinner) setSpinner(false)
     }

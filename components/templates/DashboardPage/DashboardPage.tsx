@@ -14,6 +14,7 @@ import { AnimatePresence } from 'framer-motion'
 import CartAlert from '@/components/modules/DashboardPage/CartAlert'
 
 import { motion } from 'framer-motion'
+import { error500hander } from '@/app/api.helpers'
 
 const DashboardPage: FC<PropsWithChildren> = () => {
   const darkModeClass = useTheme(styles)
@@ -38,7 +39,7 @@ const DashboardPage: FC<PropsWithChildren> = () => {
       setNewParts(received_newParts)
       setBestsellers(received_bestsellers)
     } catch (error) {
-      toast.error((error as Error).message)
+      if (!error500hander(error)) toast.error((error as Error).message)
     } finally {
       setSpinner(false)
     }

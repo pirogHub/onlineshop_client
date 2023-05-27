@@ -1,9 +1,12 @@
 import { createEffect } from "effector";
 import api from "../axiosClient";
 import { toast } from "react-toastify";
+import { error500hander } from "../api.helpers";
 
 export const getBestsellersFx = createEffect(async () => {
-    const { data } = await api.get("/boiler-parts/bestsellers")
+    const response = await api.get("/boiler-parts/bestsellers")
+    const { data } = response
+
     return data
 })
 export const getNewPartsFx = createEffect(async (url: string) => {
@@ -39,8 +42,8 @@ export const getPartByNameFx = createEffect(
 
             return data
         } catch (error) {
-
-            toast.error((error as Error).message)
+            if (!error500hander(error))
+                toast.error((error as Error).message)
         }
     }
 )

@@ -19,7 +19,7 @@ import {
 
 import { useStore } from 'effector-react'
 import Link from 'next/link'
-import { getCartItemsFx } from '@/app/api/shopping-cart'
+import { getShoppingCartFx } from '@/app/api/shopping-cart'
 import { toast } from 'react-toastify'
 import { $user } from '@/context/user'
 import { formatPrice } from '@/utils/common'
@@ -55,7 +55,7 @@ const CartPopup = forwardRef<HTMLDivElement, IWrappedComponentProps>(
     // const loadCartItems = async () => {
     //   if (user !== false) {
     //     try {
-    //       const cartItems = await getCartItemsFx(
+    //       const cartItems = await getShoppingCartFx(
     //         `/shopping-cart/${user.userId}`
     //       )
 

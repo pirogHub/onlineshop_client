@@ -15,6 +15,7 @@ import { useRouter } from 'next/router'
 import NameInput from '@/components/elements/AuthPage/NameInput'
 import { useTheme } from '@/hooks/useTheme'
 import { setUser } from '@/context/user'
+import { error500hander } from '@/app/api.helpers'
 const SignInForm = ({ linkToRedirect }: { linkToRedirect?: string }) => {
   const [spinner, setSpinner] = useState(false)
 
@@ -35,20 +36,20 @@ const SignInForm = ({ linkToRedirect }: { linkToRedirect?: string }) => {
   const onSubmit = async (data: IInputs) => {
     try {
       setSpinner(true)
-      const userData = await signInFx({
-        url: 'users/login',
+
+      const isSuccess = await signInFx({
         username: data.name,
         password: data.password,
       })
 
-      if (!userData) return
-      setUser(userData)
-      resetField('name')
-      resetField('password')
-      // setUser(userData)
-      redirector()
+      if (isSuccess) {
+        resetField('name')
+        resetField('password')
+
+        redirector()
+      }
     } catch (error) {
-      showAuthError(error)
+      error500hander(error)
     } finally {
       setSpinner(false)
     }

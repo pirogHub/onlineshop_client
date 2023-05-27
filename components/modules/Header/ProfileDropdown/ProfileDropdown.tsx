@@ -28,7 +28,7 @@ const ProfileDropdown = forwardRef<HTMLDivElement, IWrappedComponentProps>(
 
     const handleLogoutLogIn = async () => {
       if (user !== false) {
-        await logoutFx('/users/logout')
+        await logoutFx()
         router.push('/')
       } else {
         router.push(`/auth?redirect="${router.asPath}"`)

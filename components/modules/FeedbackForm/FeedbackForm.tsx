@@ -13,6 +13,7 @@ import { toast } from 'react-toastify'
 import { useTheme } from '@/hooks/useTheme'
 import cn from 'classnames'
 import Spinner from '@/components/elements/Spinner/Spinner'
+import { error500hander } from '@/app/api.helpers'
 
 const FeedbackForm = () => {
   const darkModeClass = useTheme(styles)
@@ -39,7 +40,8 @@ const FeedbackForm = () => {
       })
       .catch((error) => {
         setSpinner(false)
-        toast.error(`Что-то пошло не так! ${error.text}`)
+        if (!error500hander(error))
+          toast.error(`Что-то пошло не так! ${error.text}`)
       })
 
     formRef.current.reset()

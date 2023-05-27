@@ -343,7 +343,9 @@ $transition: 1.25s;
     &__button {
         @media (max-width: 800px) {
             margin-top: 0;
-            width: 90px;
+            width: 186px;
+
+            transform: rotate(90deg);
         }
 
         @media (max-width: 430px) {

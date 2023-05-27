@@ -11,6 +11,7 @@ import { $userCity, setUserCity } from '@/context/user'
 import { getGeolocationFx } from '@/app/api/geollocation'
 import { toast } from 'react-toastify'
 import Spinner from '../Spinner/Spinner'
+import { error500hander } from '@/app/api.helpers'
 
 const CityButton: FC = () => {
   const darkModeClass = useTheme(styles)
@@ -33,7 +34,7 @@ const CityButton: FC = () => {
           street: data.features[0].properties.address_line1,
         })
       } catch (error) {
-        toast.error((error as Error).message)
+        if (!error500hander(error)) toast.error((error as Error).message)
       }
     }
 

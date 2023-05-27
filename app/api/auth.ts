@@ -5,84 +5,75 @@ import { ISingInFx, ISingUpFx, IUser } from './../../types/auth';
 import { createEffect } from 'effector-next';
 import { HTTPStatus } from '@/constants';
 import { setUser } from '@/context/user';
+import AuthService from '@/services/auth.service';
+import { error500hander, errorCatch } from '../api.helpers';
 
 
 
 export const signInFx = createEffect(
-    async ({ url, username, password }: ISingInFx) => {
-        const response = await api.post(url, { username, password })
+    async ({ username, password }: ISingInFx) => {
+
+        const response = await AuthService.login(password, username)
 
         const { data } = response
+        if (data.user) {
+            toast.success("Вход выполнен!")
+            setUser(data.user)
+            return true
+        }
 
         if (data.warningMessage) {
-            // throw new Error(data.warningMessage)
             toast.warning(data.warningMessage)
-            return
+        } else {
+
+            toast.warning("Серверная ошибка. Повторите позже")
         }
-        toast.success("Вход выполнен!")
-        return data.user
+        return false
+
     }
 )
 
 export const signUpFx = createEffect(
-    async ({ url, username, password, email }: ISingUpFx) => {
-        const { data } = await api.post(url, { username, password, email })
+    async ({ username, password, email }: ISingUpFx) => {
+        const { data } = await AuthService.register(email, password, username)
+
+        if (data.user) {
+            toast.success("Регистрация прошла успешно!")
+            setUser(data.user)
+            return true
+        }
 
         if (data.warningMessage) {
-            // throw new Error(data.warningMessage)
-
             toast.warning(data.warningMessage)
-            return
+        } else {
+
+            toast.warning("Серверная ошибка. Повторите позже")
         }
-        await signInFx({
-            url: 'users/login',
-            username: username,
-            password: password,
-        })
-        toast.success("Регистрация прошла успешно!")
-        return data
-    }
-)
-
-
-export const checkUserAuthFx = createEffect(
-    async (url: string) => {
-
-        try {
-            const { data } = await api.get(url)
-
-            return data
-        } catch (error) {
-            return false
-            // const AxiosError = error as AxiosError
-            // if (AxiosError.response) {
-            //     if (AxiosError.response.status === HTTPStatus.FORBIDDEN) {
-            //         return false
-            //     }
-            // }
-
-            // toast.error((error as Error).message)
-        }
+        return false
     }
 )
 
 export const logoutFx = createEffect(
-    async (url: string) => {
+    async () => {
+        await AuthService.logout()
+        setUser({} as IUser)
+
+    }
+)
+export const checkUserAuthFx = createEffect(
+    async () => {
 
         try {
+            const { data } = await AuthService.getNewTokens()
 
-            await api.get(url)
-            setUser({} as IUser)
-
+            return data
         } catch (error) {
-            const AxiosError = error as AxiosError
-            if (AxiosError.response) {
-                if (AxiosError.response.status === HTTPStatus.FORBIDDEN) {
-                    return false
-                }
+            if (errorCatch(error) === "jwt-expired" || errorCatch(error) === "unauthorized") {
+                logoutFx()
             }
-
-            toast.error((error as Error).message)
+            error500hander(error)
+            return false
         }
     }
 )
+

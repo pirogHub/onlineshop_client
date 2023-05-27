@@ -19,18 +19,27 @@ const PriceRange = ({
     setPriceRange(values)
   }
   return (
-    <div className={cn(styles.filters__price, darkModeClass)}>
-      <div className={cn(styles.filters__price__inputs, darkModeClass)}>
+    <div
+      key={'priceRangeWrapper'}
+      className={cn(styles.filters__price, darkModeClass)}
+    >
+      <div
+        key={'priceRangeInputWrapper'}
+        className={cn(styles.filters__price__inputs, darkModeClass)}
+      >
         <input
+          key={'minus'}
           readOnly
           type="text"
           value={Math.ceil(priceRange[0])}
           placeholder="от 0"
         />
         <span
+          key={'divider'}
           className={cn(styles.filters__price__inputs__border, darkModeClass)}
         ></span>
         <input
+          key={'plus'}
           type="text"
           readOnly
           value={Math.ceil(priceRange[1])}
@@ -38,6 +47,7 @@ const PriceRange = ({
         />
       </div>
       <Range
+        key={'range'}
         values={priceRange}
         step={STEP}
         min={MIN}
@@ -45,6 +55,7 @@ const PriceRange = ({
         onChange={handlerPriceRangeChange}
         renderTrack={({ props, children }) => (
           <div
+            key={Math.random()}
             onMouseDown={props.onMouseDown}
             onTouchStart={props.onTouchStart}
             style={{
@@ -56,6 +67,7 @@ const PriceRange = ({
             }}
           >
             <div
+              key={Math.random()}
               ref={props.ref}
               style={{
                 height: '5px',
@@ -80,8 +92,10 @@ const PriceRange = ({
             style={{
               ...props.style,
             }}
+            key={Math.random()}
           >
             <div
+              key={Math.random()}
               style={{
                 height: '20px',
                 width: '20px',

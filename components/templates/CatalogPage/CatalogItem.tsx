@@ -86,7 +86,7 @@ const CatalogItem = ({ item }: { item: IBoilerPart }) => {
           disabled={spinner}
         >
           {spinner ? (
-            <Spinner style={{ top: 6, left: 6 }} />
+            <Spinner style={{ top: 3, left: 3 }} />
           ) : (
             <span>
               {!isInCart ? <SVG.CartHoverSvg /> : <SVG.CartHoverCheckedSvg />}

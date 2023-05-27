@@ -26,6 +26,7 @@ import ImagesAccordion from '@/components/modules/PartImageList/ImagesAccordion'
 import { useRouter } from 'next/router'
 import { useUser } from '@/hooks/useUser'
 import { useLogoutIfForbidden } from '@/hooks/useLogoutIfForbidden'
+import { error500hander } from '@/app/api.helpers'
 const PartPage = () => {
   const darkModeClass = useTheme(styles)
   const boilerPart = useStore($boilerPart)
@@ -60,7 +61,7 @@ const PartPage = () => {
       setBoilerParts(data)
       setBoilerParts_byPopularity()
     } catch (error) {
-      toast.error((error as Error).message)
+      if (!error500hander(error)) toast.error((error as Error).message)
     }
   }
 
