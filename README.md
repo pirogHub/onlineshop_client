@@ -19,6 +19,8 @@ TypeScript
 
 Стек, технологии и проч:
 
+![online-shop](online-shop.png)
+
 >Сервер: NestJS, tokens
 
 >Клиент: Онлайн оплата через Yookassa, NextJS, фильтры поиска, добавление товаров в корзину, Адаптивная верстка, Effector, Frammer motion, react-select, react-hook-form, Cookies, Session Storage
